@@ -1,38 +1,74 @@
 import { css } from "@emotion/css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import NavBar from "../components/NavBar";
 import { getPOIs } from "../apis/Map";
+// import { TMap, TMapLatLng } from "@/types";
 
 const { Tmapv2 } = window;
 
 function TMapPage() {
+  console.log(window.Tmapv2);
+  var [map, setMap] = useState(null);
+  const mapRef = useRef(null);
+  const markersRef = useRef([]); // 마커를 상태 대신 useRef로 관리
+
   const [markers, setMarkers] = useState([]); // 장소 정보 관리
   const [keyword, setKeyword] = useState(""); // 검색어
   const [selectedCategory, setSelectedCategory] = useState("카페");
   const [clickedPlace, setClickedPlace] = useState(null); // 선택된 장소
 
-  var map, marker;
-  const initTmap = async () => {
-    try {
-      if (Tmapv2) {
-        map = new Tmapv2.Map("map_div", {
-          center: new Tmapv2.LatLng(37.5652045, 126.98702028),
-          width: "100%",
-          height: "100vh",
-          zoom: 17,
-        });
-        map.setOptions({ zoomControl: false });
-      }
-    } catch (error) {
-      console.error("Tmap script load error:", error);
-    }
-  };
-
   useEffect(() => {
+    const initTmap = () => {
+      if (!window.Tmapv2) {
+        // Tmap API가 아직 로드되지 않았을 경우, 500ms 후 다시 시도
+        setTimeout(initTmap, 500);
+        return;
+      }
+
+      // Tmap API가 로드된 경우 맵 초기화 진행
+      const map = new window.Tmapv2.Map("map_div", {
+        center: new Tmapv2.LatLng(37.5652045, 126.98702028),
+        width: "100%",
+        height: "100vh",
+        zoom: 17,
+      });
+      map.setOptions({ zoomControl: false });
+      setMap(map);
+    };
+
+    console.log(markersRef);
     initTmap();
   }, []);
 
+  // map 설정이 완료된 후 초기 마커 추가
+  useEffect(() => {
+    if (window.Tmapv2 && map) {
+      addInitialMarker();
+    }
+  }, [map]);
+
+  const addInitialMarker = () => {
+    const markerPosition = new window.Tmapv2.LatLng(37.5652045, 126.98702028);
+    const initialMarker = new window.Tmapv2.Marker({
+      position: markerPosition,
+      icon: "/Marker.png",
+      iconSize: new window.Tmapv2.Size(24, 38),
+      title: "Start Marker",
+      map: map, // 지도에 마커 추가
+    });
+    markersRef.current.push(initialMarker); // 초기 마커를 ref 배열에 저장
+    console.log("Initial marker added:", initialMarker);
+  };
+
+  const clearMarkers = () => {
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+  };
+
   const search = async () => {
+    if (!map) return;
+    console.log(markers);
+
     const data = {
       searchKeyword: keyword,
       resCoordType: "EPSG3857",
@@ -43,39 +79,51 @@ function TMapPage() {
     const response = await getPOIs(data);
     var resultpoisData = response.searchPoiInfo.pois.poi;
 
+    console.log("map : ", map);
+
     // 기존 마커 제거
-    markers.forEach((marker) => marker.setMap(null));
-    setMarkers([]); // 기존 마커를 제거하고 상태 초기화
+    clearMarkers();
 
     var positionBounds = new Tmapv2.LatLngBounds(); //맵에 결과물 확인 하기 위한 LatLngBounds객체 생성
 
-    const newMarkers = resultpoisData.map((poi, index) => {
-      const noorLat = Number(poi.noorLat);
-      const noorLon = Number(poi.noorLon);
-      const name = poi.name;
+    resultpoisData.forEach((poi) => {
+      console.log("poi : ", poi);
+      const pointCng = new Tmapv2.Point(
+        Number(poi.noorLon),
+        Number(poi.noorLat)
+      );
+      const projectionCng = new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
+        pointCng
+      );
+      const lat = parseFloat(projectionCng._lat.toFixed(6));
+      const lon = parseFloat(projectionCng._lng.toFixed(6));
+      const markerPosition = new Tmapv2.LatLng(lat, lon);
+      console.log("lat : ", lat);
+      console.log("lon : ", lon);
 
-      const pointCng = new window.Tmapv2.Point(noorLon, noorLat);
-      const projectionCng =
-        window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(pointCng);
-
-      const lat = projectionCng._lat;
-      const lon = projectionCng._lng;
-
-      const markerPosition = new window.Tmapv2.LatLng(lat, lon);
-
-      const marker = new window.Tmapv2.Marker({
+      const newMarker = new Tmapv2.Marker({
         position: markerPosition,
-        icon: `/upload/tmap/marker/pin_b_m_${index}.png`,
-        iconSize: new window.Tmapv2.Size(24, 38),
-        title: name,
+        icon: "/Marker.png",
+        iconSize: new Tmapv2.Size(24, 38),
+        title: poi.name,
         map: map,
       });
-
+      console.log("marker : ", newMarker);
+      markersRef.current.push(newMarker); // 마커를 ref 배열에 추가
       positionBounds.extend(markerPosition); // LatLngBounds의 객체 확장
-      return marker;
+      console.log("Marker added at position:", markerPosition);
     });
-    setMarkers(newMarkers); // 마커 상태 업데이트
-    console.log(response);
+
+    map.fitBounds(positionBounds); // 지도 중심과 확대 조정
+
+    // console.log("test : ", markersRef);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      // setKeyword(e.target.value);
+      search();
+    }
   };
 
   return (
@@ -125,6 +173,7 @@ function TMapPage() {
                 outline: none;
               }
             `}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setKeyword(e.target.value)}
           />
           <img
@@ -149,8 +198,9 @@ function TMapPage() {
           `}
         >
           {["카페", "음식점", "편의점", "주유소", "문화시설", "대형마트"].map(
-            (text) => (
+            (text, index) => (
               <div
+                key={index}
                 className={css`
                   --height: 2rem;
                   background-color: ${selectedCategory === text
@@ -178,10 +228,12 @@ function TMapPage() {
       </div>
       <div
         id="map_div"
+        // onCreate={() => initTmap()}
         className={css`
           width: 100%;
           height: 100vh;
         `}
+        // ref={mapRef}
       />
 
       <NavBar />

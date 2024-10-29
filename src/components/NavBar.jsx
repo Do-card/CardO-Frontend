@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 
+
+// map반복문으로 매핑해서 nav뿌릴 수 있을 것 같음
+
+
 function NavBar({ isSelected }) {
   const navigate = useNavigate();
 
@@ -79,7 +83,7 @@ function NavBar({ isSelected }) {
         `}
         onClick={() => goToMyPage()}
       >
-        {isSelected === "User" ? (
+        {isSelected === "Card" ? (
           <img src="/Card_white.svg" alt="" />
         ) : (
           <img src="/Card.svg" alt="" />
