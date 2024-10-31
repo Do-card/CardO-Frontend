@@ -11,6 +11,8 @@ import MyPage from "./pages/MyPage";
 import CardSelectPage from "./pages/CardSelectPage";
 import DiscountPage from "./pages/DiscountPage";
 import CardRecommendPage from "./pages/CardRecommendPage";
+import TMapPage from "./pages/TMapPage";
+import HomePage from "./pages/HomePage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -26,7 +28,7 @@ function App() {
   useEffect(() => {
     // console.log(checkLocation("/signin"));
     // console.log(checkLocation("/"));
-    if (!checkLocation("/login") && !checkLocation("/signin")) {
+    if (!checkLocation("/login") && !checkLocation("/signin") && !checkLocation("/tmap") && !checkLocation("/home")) {
       // console.log(AccessToken);
       if (!AccessToken || AccessToken == null) {
         navigate("/login");
@@ -56,7 +58,8 @@ function App() {
         <Route path="/card-select" element={<CardSelectPage />}></Route>
         <Route path="/discount" element={<DiscountPage />}></Route>
         <Route path="/recommend" element={<CardRecommendPage />}></Route>
-
+        <Route path="/tmap" element={<TMapPage />}></Route>
+        <Route path="/home" element={<HomePage />}></Route>
         {/*<Route path="/" element={<Page3 />}></Route> */}
       </Routes>
     </div>
