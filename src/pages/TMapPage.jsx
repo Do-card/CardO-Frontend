@@ -130,11 +130,13 @@ function TMapPage() {
       centerLon: location.center.lng,
       resCoordType: "EPSG3857",
       reqCoordType: "WGS84GEO",
-      count: 10,
+      count: 3,
     };
 
     const response = await getPOIs(data);
     const resultpoisData = response.searchPoiInfo.pois.poi;
+
+    clearMarkers();
 
     const positionBounds = new window.Tmapv2.LatLngBounds();
 
