@@ -8,38 +8,76 @@ function TMapPage() {
   const markersRef = useRef([]);
   const [keyword, setKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("카페");
+  const [currentLocation, setCurrentLocation] = useState({
+    center: {
+      lat: 33.450701,
+      lng: 126.570667,
+    },
+  });
 
-  const initTmap = () => {
+  const [mapCenter, setMapCenter] = useState({
+    lat: 37.554371328,
+    lng: 126.9227542239,
+  });
+
+  const getGeolocation = async () => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              center: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              },
+            };
+            setCurrentLocation(location);
+            setMapCenter(location);
+            resolve(location);
+          },
+          (error) => {
+            console.error("Error getting location: ", error);
+            reject(error);
+          }
+        );
+      }
+    });
+  };
+
+  const initTmap = (location) => {
     if (mapRef.current) {
-      mapRef.current.destroy(); // 기존 map 인스턴스 제거
+      mapRef.current.destroy();
     }
 
     const newMap = new window.Tmapv2.Map("map_div", {
-      center: new window.Tmapv2.LatLng(37.566482038912525, 126.98185405041606),
+      center: new window.Tmapv2.LatLng(
+        location.center.lat,
+        location.center.lng
+      ),
       width: "100%",
       height: "100vh",
       zoom: 17,
     });
+    console.log(location);
     mapRef.current = newMap;
-    addInitialMarker(newMap);
+    newMap.setOptions({ zoomControl: false });
+    addInitialMarker(newMap, location);
+
+    newMap.addListener("center_changed", () => {
+      const center = newMap.getCenter();
+      setCurrentLocation({ center: { lat: center._lat, lng: center._lng } });
+      search(center._lat, center._lng);
+    });
   };
 
-  useEffect(() => {
-    const loadTmap = () => {
-      if (!window.Tmapv2) {
-        setTimeout(loadTmap, 500);
-        return;
-      }
-      initTmap();
-    };
-    loadTmap();
-  }, []);
-
-  const addInitialMarker = (mapInstance) => {
+  const addInitialMarker = (mapInstance, location) => {
     const marker = new window.Tmapv2.Marker({
-      position: new window.Tmapv2.LatLng(37.566482038912525, 126.98185405041606),
+      position: new window.Tmapv2.LatLng(
+        location.center.lat,
+        location.center.lng
+      ),
       icon: "/Marker.png",
-      iconSize: new window.Tmapv2.Size(24, 38),
+      iconSize: new window.Tmapv2.Size(26, 38),
       title: "Start Marker",
       map: mapInstance,
     });
@@ -52,11 +90,44 @@ function TMapPage() {
     markersRef.current = [];
   };
 
-  const search = async () => {
-    initTmap(); // 새로운 지도 생성 및 초기화
+  useEffect(() => {
+    const initializeMap = async () => {
+      try {
+        const location = await getGeolocation();
+        initTmap(location);
+      } catch (error) {
+        console.error("Failed to initialize map:", error);
+      }
+    };
+
+    const loadTmap = () => {
+      if (!window.Tmapv2) {
+        setTimeout(loadTmap, 500);
+        return;
+      }
+      initializeMap();
+    };
+    loadTmap();
+  }, []);
+
+  const search = async (searchKeyword = keyword) => {
+    initTmap(currentLocation);
+    const center = mapRef.current.getCenter();
+    const location = {
+      center: {
+        lat: center._lat,
+        lng: center._lng,
+      },
+    };
+
+    if (!keyword.trim()) return; // 검색어가 없으면 중단
+
+    clearMarkers();
 
     const data = {
-      searchKeyword: keyword,
+      searchKeyword: searchKeyword,
+      centerLat: location.center.lat,
+      centerLon: location.center.lng,
       resCoordType: "EPSG3857",
       reqCoordType: "WGS84GEO",
       count: 3,
@@ -73,11 +144,17 @@ function TMapPage() {
       const noorLat = Number(poi.noorLat);
       const noorLon = Number(poi.noorLon);
       const pointCng = new window.Tmapv2.Point(noorLon, noorLat);
-      const projectionCng = new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(pointCng);
-      const markerPosition = new window.Tmapv2.LatLng(projectionCng._lat, projectionCng._lng);
+      const projectionCng =
+        new window.Tmapv2.Projection.convertEPSG3857ToWGS84GEO(pointCng);
+      const markerPosition = new window.Tmapv2.LatLng(
+        projectionCng._lat,
+        projectionCng._lng
+      );
 
       const marker = new window.Tmapv2.Marker({
         position: markerPosition,
+        icon: "/Marker.png",
+        iconSize: new window.Tmapv2.Size(26, 38),
         map: mapRef.current,
       });
 
@@ -90,8 +167,15 @@ function TMapPage() {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      search();
+      const center = mapRef.current.getCenter();
+      search(center._lat, center._lng);
     }
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setKeyword(category); // 카테고리를 키워드로 설정
+    search(category); // 검색 함수 호출
   };
 
   return (
@@ -152,7 +236,9 @@ function TMapPage() {
               right: 1rem;
               z-index: 2;
             `}
-            onClick={() => search()}
+            onClick={() => {
+              search();
+            }}
           />
         </div>
         <div
@@ -185,7 +271,7 @@ function TMapPage() {
                   cursor: pointer;
                 `}
                 onClick={() => {
-                  setSelectedCategory(text);
+                  handleCategoryClick(text);
                 }}
               >
                 {text}
