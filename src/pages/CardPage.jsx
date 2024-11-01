@@ -110,26 +110,16 @@ function CardPage() {
     >
       <div
         className={css`
-          font-size: 3.8rem;
-          width: 80%;
-          font-family: "Pretendard";
-          font-weight: 700;
-          margin-top: 1.7rem;
-        `}
-      >
-        Hello,
-      </div>
-      <div
-        className={css`
-          font-size: 3.2rem;
-          width: 80%;
+          width: 100%;
+          padding-top: 2rem;
+          padding-left: 4rem;
           display: flex;
-          justify-content: flex-end;
-          font-family: "Pretendard";
-          font-weight: 700;
+          float: left;
+          font-size: 2.5rem;
+          font-weight: bold;
         `}
       >
-        {user}
+        Card
       </div>
       <div
         className={css`
@@ -140,7 +130,7 @@ function CardPage() {
           width: 90%;
           height: 39vh;
           overflow: hidden;
-          margin-top: 0.5rem;
+          margin-top: 2rem;
         `}
       >
         <div

@@ -14,8 +14,10 @@ import CardRecommendPage from "./pages/CardRecommendPage";
 import TMapPage from "./pages/TMapPage";
 import HomePage from "./pages/HomePage";
 import CardPage from "./pages/CardPage";
+import TodoPage from "./pages/TodoPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ function App() {
   useEffect(() => {
     // console.log(checkLocation("/signin"));
     // console.log(checkLocation("/"));
-    if (!checkLocation("/login") && !checkLocation("/signin") && !checkLocation("/tmap") && !checkLocation("/home") && !checkLocation("/card")) {
+    if (!checkLocation("/login") && !checkLocation("/signin") && !checkLocation("/todo") && !checkLocation("/home") && !checkLocation("/card")) {
       // console.log(AccessToken);
       if (!AccessToken || AccessToken == null) {
         navigate("/login");
@@ -62,8 +64,10 @@ function App() {
         <Route path="/tmap" element={<TMapPage />}></Route>
         <Route path="/home" element={<HomePage />}></Route>
         <Route path="/card" element={<CardPage />}></Route>
+        <Route path="/todo" element={<TodoPage />}></Route>
         {/*<Route path="/" element={<Page3 />}></Route> */}
       </Routes>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </div>
   );
 }

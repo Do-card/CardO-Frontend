@@ -1,117 +1,134 @@
 import { css } from "@emotion/css";
-import { useState } from "react";
 
 function TodoCard() {
-  // Define initial state with each pattern's "completed" status
-  const [patterns, setPatterns] = useState([
-    { id: 1, name: "립밤 사기", completed: false },
-    { id: 2, name: "사과 5개 사기", completed: false },
-    { id: 3, name: "커튼 코정 핀 사기", completed: false }
-  ]);
-
-  // Toggle the "completed" status when an item is clicked
-  const handleToggleComplete = (id) => {
-    setPatterns((prevPatterns) =>
-      prevPatterns.map((pattern) =>
-        pattern.id === id ? { ...pattern, completed: !pattern.completed } : pattern
-      )
-    );
-  };
-
+  const todoList = ["사과 사기", "국수 사기", "양배추 사기"];
   return (
     <div
       className={css`
-        margin-top: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        border-radius:1rem;
-        background-color: #ffffff;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        position: relative;
+        margin-top: 1rem;
       `}
     >
-      <div className={css`
-          display: flex;
+      {/* 삭제 버튼 */}
+      <img
+        src="/X.svg"
+        alt=""
+        className={css`
+          position: absolute;
+          right: 0.5rem;
+          width: 1.5rem;
+        `}
+      />
+
+      {/* ToDo 파일 */}
+      <div
+        className={css`
           width: 100%;
-          position: relative;
-        `}>
-        <div className={css`
-          padding-left: 1rem;
-          padding-top: 1rem;
-          width: 74.5%;
-          padding-bottom: 10px;
-          font-weight: 700;
-          color: #002C1B;
-          background-color: #E6FFCA;
-          border-radius: 1rem 1rem 0 0;
-          font-size: 31px;
-        `}>TODO LIST</div>
-        <div className={css`
-          position: absolute;
-          top: 0;
-          right: 0;
-          background-color: #E6FFCA; 
-          border-radius: 0 1rem 0 0;
-          width: 4rem;
-          height: 4rem;
-        `}>
-          <div className={css`
-          position: absolute;
-          border-radius: 0 1rem;
-          top: 0;
-          right: 0;
-          background-color: #ffffff; 
-          width: 4rem;
-          height: 4rem;
-        `}>
-            <img src="/move.svg" alt="" 
+        `}
+      >
+        {/* Todo Header */}
+        <div
+          className={css`
+            display: flex;
+            align-items: end;
+          `}
+        >
+          <div
+            className={css`
+              display: inline-flex;
+              align-items: center;
+              background-color: #ffffff;
+              padding-left: 0.5rem;
+              padding-right: 1rem;
+              padding-block: 0.3rem;
+              border-top-right-radius: 0.7rem;
+              border-top-left-radius: 0.7rem;
+            `}
+          >
+            {/* 즐겨찾기 여부 */}
+            <img src="/star_grey.svg" alt="" />
+            {/* Todo 카테고리 이름 */}
+            <div
               className={css`
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                width: 2.5rem;
-                height: 2.5rem;
-            `}/>
+                margin-left: 0.4rem;
+                font-size: 1.2rem;
+                font-weight: 800;
+              `}
+            >
+              이름
+            </div>
+          </div>
+          <div
+            className={css`
+              content: "";
+              height: 10px;
+              width: 10px;
+              background: radial-gradient(
+                circle at top right,
+                transparent 70%,
+                white 50%
+              );
+            `}
+          ></div>
+          {/* 위치 */}
+          <div
+            className={css`
+              color: #959595;
+              font-size: 0.8rem;
+              font-weight: 500;
+              margin-left: 0.5rem;
+              margin-bottom: 0.5rem;
+            `}
+          >
+            하나로마트
           </div>
         </div>
-      </div>
-      <div className={css`
-        border-radius:0 1rem 1rem 1rem;
-        padding-left: 1rem;
-        padding-bottom: 1.5rem;
-        background-color: #E6FFCA;
-      `} >
-        {patterns.map((pattern) => (
-          <div
-            onClick={() => handleToggleComplete(pattern.id)}
-            className={css`
-              padding: 5px;
-              font-size: 20px;
-              font-weight: 600px;
-              display: flex;
-              cursor: pointer;
-              ${pattern.completed ? "text-decoration: line-through; color: #626262;" : ""}
-            `}
-            key={pattern.id}
-          >
-            <div className={css`
-                padding-right: 15px;
-                color: #002C1B;
+        <div
+          className={css`
+            background-color: #ffffff;
+            border-bottom-left-radius: 0.7rem;
+            border-bottom-right-radius: 0.7rem;
+            border-top-right-radius: 0.7rem;
+            padding: 1rem 0.8rem;
+          `}
+        >
+          {/* Todo List */}
+          {todoList.map((todo, index) => (
+            <div
+              key={index}
+              className={css`
                 display: flex;
-                justify-content: center;
-                align-items: center;
-              `}>
-              <img src="/checked.svg" alt="" />
+                margin-bottom: 0.5rem;
+              `}
+            >
+              <img src="/Unselected.svg" alt="" className={css``} />
+              <div
+                className={css`
+                  margin-left: 0.5rem;
+                `}
+              >
+                {todo}
+              </div>
             </div>
-            <div className={css`
-                ${pattern.completed ? "color: #626262;" : "color: #002C1B;"}
-              `}>
-              {pattern.name}
-            </div>
-          </div>
-        ))}
+          ))}
+
+          {/* Todo 추가 */}
+          <input
+            type="text"
+            placeholder="추가..."
+            className={css`
+              outline: none;
+              border: none;
+              font-size: 1rem;
+              margin-top: 0.3rem;
+              color: #959595;
+            `}
+          />
+        </div>
       </div>
+      
     </div>
   );
 }
-
 export default TodoCard;

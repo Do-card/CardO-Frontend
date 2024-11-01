@@ -2,34 +2,41 @@ import { css } from "@emotion/css";
 import { useEffect, useState, useRef } from "react";
 import NavBar from "../components/NavBar";
 import TrendCard from "../components/TrendCard";
-import TodoCard from "../components/TodoCard";
+import TodoMain from "../components/TodoMain";
 import { useNavigate } from "react-router-dom";
 
-function HomePage(){
+function HomePage() {
   return (
-    <div className={css`
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background-color: #f5f5f5;
-      padding: 1rem 2rem 2rem 2rem;
-      margin: 0 auto;
-    `}>
+    <div
+      className={css`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #f6f6f6;
+        padding: 0 2rem;
+        margin: 0 auto;
+      `}
+    >
       <div
         className={css`
+          width: 100%;
+          display: flex;
+          float: left;
           font-size: 23px;
           font-weight: 600;
-          margin: 1rem 0;
-      `}>실시간 소비 트렌트</div>
+          margin: 2rem 0 1rem 0;
+        `}
+      >
+        실시간 소비 트렌트
+      </div>
       {/* Map Component */}
       <TrendCard />
-      <TodoCard />
-      
-
+      <TodoMain />
 
       <NavBar isSelected={"Home"} />
     </div>
-  )
+  );
 }
 
 export default HomePage;
