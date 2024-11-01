@@ -9,18 +9,63 @@ const axios = Axios.create({
   baseURL: url,
 });
 
+const renewToken = async () => {
+  const refreshToken = sessionStorage.getItem("refreshToken");
+  if (!refreshToken){
+    return;
+  }
+
+  const response = await axios.post("/auth/refresh", { refreshToken });
+  if (response.status === 200){
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    window.location.reload();
+    return Promise.reject(response);
+  }
+  return response.data.result;
+}
+
 axios.interceptors.request.use(
-  (config) => {
+  async (request) => {
     const accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      // console.log("Error : no accessToken");
+    const refreshToken = sessionStorage.getItem("refreshToken");
+    
+    if (request.url !== "/auth/logout" && request.url.includes("/auth")){
+      return request;
     }
-    return config;
+
+    if (accessToken) {
+      request.headers.Authorization = `Bearer ${accessToken}`;
+    } else if (refreshToken) {
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await renewToken();
+      sessionStorage.setItem("accessToken", newAccessToken);
+      sessionStorage.setItem("refreshToken", newRefreshToken);
+      request.headers.Authorization = `Bearer ${newAccessToken}`;
+    }
+    return request;
   },
-  (error) => {
-    return Promise.reject(error);
+  (error) => Promise.reject(error)
+);
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (originalRequest.url !== "/auth/logout" && originalRequest.url.includes('/auth')){
+      return error;
+    }
+
+    // Access token 만료 및 401 에러 발생 시 토큰 갱신 시도
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // 무한 루프 방지용 플래그 설정
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await renewToken();
+      sessionStorage.setItem("accessToken", newAccessToken);
+      sessionStorage.setItem("refreshToken", newRefreshToken);
+      
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+      return axios(originalRequest);
+    }
+    return error;
   }
 );
 

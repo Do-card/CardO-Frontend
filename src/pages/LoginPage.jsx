@@ -20,9 +20,10 @@ function LoginPage() {
   };
 
   const login = async () => {
-    const form = new FormData();
-    form.append("username", userId);
-    form.append("password", password);
+    const form = {
+      "email": userId,
+      "password": password
+    }
     const response = await Login(form).then((res) => {
       return res;
     });

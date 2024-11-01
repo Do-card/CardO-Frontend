@@ -2,26 +2,26 @@ import axios from "./Axios";
 
 export const Login = async (form) => {
   try {
-    // console.log(form);
-    const response = await axios.post("/login", form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    // console.log(response);
-    const accessToken = response.headers.authorization.split(" ");
-    if (accessToken) {
-      sessionStorage.setItem("accessToken", accessToken[1]);
+    const response = await axios.post("/auth/login", form);
+    const accessToken = response.data.result.accessToken;
+    const refreshToken = response.data.result.refreshToken;
+
+    if (accessToken && refreshToken) {
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("refreshToken", refreshToken);
       return true;
     } else {
-      // console.error("로그인 실패 : accessToken이 없습니다.");
       return false;
     }
   } catch (error) {
-    // console.error("login failed:", error);
     return false;
   }
 };
 
 // 로그아웃
 export const logout = async () => {
+  await axios.post("/auth/logout");
   sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
+  window.location.reload();
 };
