@@ -14,7 +14,7 @@ function HomePage() {
         align-items: center;
         height: 100vh;
         background-color: #f6f6f6;
-        padding: 1rem 2rem 2rem 2rem;
+        padding: 0 2rem;
         margin: 0 auto;
       `}
     >
@@ -25,7 +25,7 @@ function HomePage() {
           float: left;
           font-size: 23px;
           font-weight: 600;
-          margin: 1rem 0;
+          margin: 2rem 0 1rem 0;
         `}
       >
         실시간 소비 트렌트

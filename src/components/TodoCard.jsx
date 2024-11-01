@@ -20,7 +20,7 @@ function TodoCard() {
           width: 1.5rem;
         `}
       />
-      
+
       {/* ToDo 파일 */}
       <div
         className={css`
@@ -127,6 +127,7 @@ function TodoCard() {
           />
         </div>
       </div>
+      
     </div>
   );
 }

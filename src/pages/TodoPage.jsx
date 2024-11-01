@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
 import { useState } from "react";
 import TodoCard from "../components/TodoCard";
+import NavBar from "../components/NavBar";
 
 function TodoPage() {
   const [keyword, setKeyword] = useState();
@@ -17,14 +18,13 @@ function TodoPage() {
         align-items: center;
         background-color: #f6f6f6;
         height: 100vh;
-        padding: 1rem 2rem 2rem 2rem;
+        padding: 0 2rem;
       `}
     >
       <div
         className={css`
           width: 100%;
           padding-top: 2rem;
-
           display: flex;
           float: left;
           font-size: 2.5rem;
@@ -71,6 +71,7 @@ function TodoPage() {
         />
       </div>
       <TodoCard />
+      <NavBar isSelected={"Todo"} />
     </div>
   );
 }
