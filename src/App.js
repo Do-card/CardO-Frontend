@@ -23,19 +23,22 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const AccessToken = window.sessionStorage.getItem("accessToken");
+  const RefreshToken = window.sessionStorage.getItem("refreshToken");
 
   const checkLocation = (locationName) => {
     return location.pathname.startsWith(locationName);
   }
 
   useEffect(() => {
-    // console.log(checkLocation("/signin"));
-    // console.log(checkLocation("/"));
-    if (!checkLocation("/login") && !checkLocation("/signin") && !checkLocation("/todo") && !checkLocation("/home") && !checkLocation("/card")) {
-      // console.log(AccessToken);
-      if (!AccessToken || AccessToken == null) {
-        navigate("/login");
-      }
+    // if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/todo") || checkLocation("/home") || checkLocation("/card")) {
+    //   return;
+    // }
+    if (!checkLocation("/login")){
+      return;
+    }
+    
+    if (!AccessToken && !RefreshToken) {
+      navigate("/login");
     }
   }, [location.pathname])
 
