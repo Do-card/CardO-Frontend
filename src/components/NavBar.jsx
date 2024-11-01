@@ -2,23 +2,43 @@ import React, { useEffect, useState } from "react";
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 
-
 // map반복문으로 매핑해서 nav뿌릴 수 있을 것 같음
-
 
 function NavBar({ isSelected }) {
   const navigate = useNavigate();
 
-  const goToMyPage = () => {
-    navigate("/mypage");
-  };
+  // const goToMyPage = () => {
+  //   navigate("/mypage");
+  // };
 
-  const goToHome = () => {
-    navigate("/");
-  };
+  // const goToHome = () => {
+  //   navigate("/");
+  // };
 
-  const goToMap = () => {
-    navigate("/map");
+  // const goToMap = () => {
+  //   navigate("/map");
+  // };
+
+  const menuName = ["User", "Card", "Home", "Map", "Todo"];
+
+  const redirectPage = (page) => {
+    switch (page) {
+      case "User":
+        navigate("/mypage");
+        break;
+      case "Card":
+        navigate("/card");
+        break;
+      case "Home":
+        navigate("/home");
+        break;
+      case "Map":
+        navigate("/map");
+        break;
+      default:
+        navigate("/todo");
+        break;
+    }
   };
 
   return (
@@ -41,7 +61,36 @@ function NavBar({ isSelected }) {
         align-items: center;
       `}
     >
-      <div
+      {menuName.map((menu, index) => {
+        return (
+          <div
+            key={index}
+            className={css`
+              width: 6.3rem;
+              height: 3.2rem;
+              box-sizing: border-box;
+              background-color: ${isSelected === menu ? "black" : "white"};
+              border-radius: 3rem;
+              box-shadow: ${isSelected === menu
+                ? "0 0 10px rgba(0, 0, 0, 0.15)"
+                : "none"};
+
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+            `}
+            onClick={() => redirectPage(menu)}
+          >
+            {isSelected === menu ? (
+              <img src={`/${menu}_white.svg`} alt="" />
+            ) : (
+              <img src={`/${menu}.svg`} alt="" />
+            )}
+          </div>
+        );
+      })}
+      {/* <div
         className={css`
           width: 6.3rem;
           height: 3.2rem;
@@ -70,9 +119,9 @@ function NavBar({ isSelected }) {
           width: 6.3rem;
           height: 3.2rem;
           box-sizing: border-box;
-          background-color: ${isSelected === "User" ? "black" : "white"};
+          background-color: ${isSelected === "Card" ? "black" : "white"};
           border-radius: 3rem;
-          box-shadow: ${isSelected === "User"
+          box-shadow: ${isSelected === "Card"
             ? "0 0 10px rgba(0, 0, 0, 0.15)"
             : "none"};
 
@@ -143,9 +192,9 @@ function NavBar({ isSelected }) {
           width: 6.3rem;
           height: 3.2rem;
           box-sizing: border-box;
-          background-color: ${isSelected === "Map" ? "black" : "white"};
+          background-color: ${isSelected === "Todo" ? "black" : "white"};
           border-radius: 3rem;
-          box-shadow: ${isSelected === "Map"
+          box-shadow: ${isSelected === "Todo"
             ? "0 0 10px rgba(0, 0, 0, 0.15)"
             : "none"};
 
@@ -161,7 +210,7 @@ function NavBar({ isSelected }) {
         ) : (
           <img src="/Todo.svg" alt="" />
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
