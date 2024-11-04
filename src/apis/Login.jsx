@@ -8,7 +8,7 @@ export const Login = async (form) => {
 
     if (accessToken && refreshToken) {
       sessionStorage.setItem("accessToken", accessToken);
-      sessionStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("refreshToken", refreshToken);
       return true;
     } else {
       return false;
@@ -22,6 +22,6 @@ export const Login = async (form) => {
 export const logout = async () => {
   await axios.post("/auth/logout");
   sessionStorage.removeItem("accessToken");
-  sessionStorage.removeItem("refreshToken");
+  localStorage.removeItem("refreshToken");
   window.location.reload();
 };

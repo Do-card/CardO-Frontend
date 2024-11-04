@@ -10,16 +10,16 @@ const axios = Axios.create({
 });
 
 const renewToken = async () => {
-  const refreshToken = sessionStorage.getItem("refreshToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   if (!refreshToken) {
     return;
   }
 
   const response = await axios.post("/auth/refresh", { refreshToken });
-  if (response.status === 200) {
+  if (response.status !== 200) {
     sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("refreshToken");
-    window.location.reload();
+    localStorage.removeItem("refreshToken");
+    // window.location.reload();
     return Promise.reject(response);
   }
   return response.data.result;
@@ -28,7 +28,7 @@ const renewToken = async () => {
 axios.interceptors.request.use(
   async (request) => {
     const accessToken = sessionStorage.getItem("accessToken");
-    const refreshToken = sessionStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
     if (request.url !== "/auth/logout" && request.url.includes("/auth")) {
       return request;
@@ -40,7 +40,7 @@ axios.interceptors.request.use(
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
         await renewToken();
       sessionStorage.setItem("accessToken", newAccessToken);
-      sessionStorage.setItem("refreshToken", newRefreshToken);
+      localStorage.setItem("refreshToken", newRefreshToken);
       request.headers.Authorization = `Bearer ${newAccessToken}`;
     }
     return request;
@@ -69,7 +69,7 @@ axios.interceptors.response.use(
       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
         await renewToken();
       sessionStorage.setItem("accessToken", newAccessToken);
-      sessionStorage.setItem("refreshToken", newRefreshToken);
+      localStorage.setItem("refreshToken", newRefreshToken);
 
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return axios(originalRequest);
