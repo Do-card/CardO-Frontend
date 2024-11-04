@@ -77,7 +77,13 @@ function AddLocationPage() {
       (data, status, _pagination) => {
         if (status === kakao.maps.services.Status.OK) {
           console.log("data : ", data);
-          setPlaces(data);
+          const newData = data.map((place) => ({
+            ...place,
+            selected: false,
+          }));
+          setPlaces(newData);
+          console.log("newdata : ", newData);
+
           const bounds = new kakao.maps.LatLngBounds();
           let markers = [];
           for (var i = 0; i < data.length; i++) {
@@ -113,6 +119,17 @@ function AddLocationPage() {
       //   return search();
     }
   };
+  const selectedPlace = (index) => {
+    setPlaces((prevPlaces) =>
+      prevPlaces.map((place, i) =>
+        i === index
+          ? { ...place, selected: true }
+          : { ...place, selected: false }
+      )
+    );
+    console.log("selected!!!!!!!!!!!!", places);
+  };
+
   return (
     <div
       className={css`
@@ -246,7 +263,7 @@ function AddLocationPage() {
           ></div>
 
           {places.map((place, index) => (
-            <PlaceInfo place={place} key={index} />
+            <PlaceInfo place={place} key={index} onClick={() => selectedPlace(index)} />
           ))}
         </div>
       ) : (
