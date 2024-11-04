@@ -5,11 +5,55 @@ import NavBar from "../components/NavBar";
 
 function TodoPage() {
   const [keyword, setKeyword] = useState();
+  const todoList = [
+    {
+      id: 1,
+      name: "테스트마커",
+      poiId: "3",
+      latitude: 37.1436364,
+      longitude: 127.415285324,
+      colorBackground: "#ffffff",
+      favorite: false,
+      items: [
+        {
+          id: 1,
+          markerId: 1,
+          name: "테스트아이템1",
+          category: "테스트",
+          done: false,
+          deleted: false,
+        },
+        {
+          id: 2,
+          markerId: 1,
+          name: "테스트아이템2",
+          category: "테스트",
+          done: false,
+          deleted: false,
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "테스트마커2",
+      poiId: "3",
+      latitude: 37.1436364,
+      longitude: 127.415285324,
+      colorBackground: "#F9FFDE",
+      favorite: false,
+      items: [],
+    },
+  ];
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       //검색
     }
   };
+
+  const newMarker = () => {
+    // 새로운 빈 마커 추가
+  };
+
   return (
     <div
       className={css`
@@ -42,6 +86,16 @@ function TodoPage() {
           margin-top: 1rem;
         `}
       >
+        <img
+          src="/Add.svg"
+          alt=""
+          className={css`
+            position: absolute;
+            right: 0;
+            top: -3.5rem;
+          `}
+          onClick={newMarker()}
+        />
         <input
           type="text"
           className={css`
@@ -70,7 +124,9 @@ function TodoPage() {
           `}
         />
       </div>
-      <TodoCard />
+      {todoList.map((todo, index) => (
+        <TodoCard Todo={todo} />
+      ))}
       <NavBar isSelected={"Todo"} />
     </div>
   );
