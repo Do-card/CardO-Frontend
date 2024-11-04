@@ -24,7 +24,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const AccessToken = window.sessionStorage.getItem("accessToken");
-  const RefreshToken = window.sessionStorage.getItem("refreshToken");
+  const RefreshToken = window.localStorage.getItem("refreshToken");
 
   const checkLocation = (locationName) => {
     return location.pathname.startsWith(locationName);
@@ -34,7 +34,7 @@ function App() {
     // if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/todo") || checkLocation("/home") || checkLocation("/card")) {
     //   return;
     // }
-    if (!checkLocation("/login")) {
+    if (checkLocation("/login")) {
       return;
     }
 
