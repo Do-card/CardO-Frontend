@@ -1,7 +1,16 @@
 import { css } from "@emotion/css";
+import { useNavigate } from "react-router-dom";
 
-function TodoCard() {
-  const todoList = ["사과 사기", "국수 사기", "양배추 사기"];
+function TodoCard({ Todo }) {
+  const navigator = useNavigate();
+  const ToLocation = (location) => {
+    if (location) {
+      // 위치 넘기기
+    } else {
+      // 위치 추가 페이지로
+      navigator("/addloc");
+    }
+  };
   return (
     <div
       className={css`
@@ -38,7 +47,7 @@ function TodoCard() {
             className={css`
               display: inline-flex;
               align-items: center;
-              background-color: #ffffff;
+              background-color: ${Todo.colorBackground};
               padding-left: 0.5rem;
               padding-right: 1rem;
               padding-block: 0.3rem;
@@ -56,7 +65,7 @@ function TodoCard() {
                 font-weight: 800;
               `}
             >
-              이름
+              {Todo.name}
             </div>
           </div>
           <div
@@ -79,14 +88,17 @@ function TodoCard() {
               font-weight: 500;
               margin-left: 0.5rem;
               margin-bottom: 0.5rem;
+              cursor: pointer;
             `}
+            onClick={() => ToLocation(Todo.location)}
           >
-            하나로마트
+            {/* 위치 있으면 위치 이름 띄우고 없으면 위치 추가 */}
+            {Todo.location ? Todo.location : "위치 추가"}
           </div>
         </div>
         <div
           className={css`
-            background-color: #ffffff;
+            background-color: ${Todo.colorBackground};
             border-bottom-left-radius: 0.7rem;
             border-bottom-right-radius: 0.7rem;
             border-top-right-radius: 0.7rem;
@@ -94,7 +106,7 @@ function TodoCard() {
           `}
         >
           {/* Todo List */}
-          {todoList.map((todo, index) => (
+          {Todo.items.map((todo, index) => (
             <div
               key={index}
               className={css`
@@ -108,7 +120,7 @@ function TodoCard() {
                   margin-left: 0.5rem;
                 `}
               >
-                {todo}
+                {todo.name}
               </div>
             </div>
           ))}
@@ -123,11 +135,11 @@ function TodoCard() {
               font-size: 1rem;
               margin-top: 0.3rem;
               color: #959595;
+              background-color: ${Todo.colorBackground};
             `}
           />
         </div>
       </div>
-      
     </div>
   );
 }

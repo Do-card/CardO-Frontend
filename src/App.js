@@ -15,6 +15,7 @@ import TMapPage from "./pages/TMapPage";
 import HomePage from "./pages/HomePage";
 import CardPage from "./pages/CardPage";
 import TodoPage from "./pages/TodoPage";
+import AddLocationPage from "./pages/AddLocationPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -33,10 +34,10 @@ function App() {
     // if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/todo") || checkLocation("/home") || checkLocation("/card")) {
     //   return;
     // }
-    if (!checkLocation("/login")){
+    if (!checkLocation("/login")) {
       return;
     }
-    
+
     if (!AccessToken && !RefreshToken) {
       navigate("/login");
     }
@@ -68,6 +69,7 @@ function App() {
         <Route path="/home" element={<HomePage />}></Route>
         <Route path="/card" element={<CardPage />}></Route>
         <Route path="/todo" element={<TodoPage />}></Route>
+        <Route path="/addloc" element={<AddLocationPage />}></Route>
         {/*<Route path="/" element={<Page3 />}></Route> */}
       </Routes>
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
