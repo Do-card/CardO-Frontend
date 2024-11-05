@@ -23,17 +23,21 @@ function TrendCard() {
         border-radius:1rem;
         background-color: #ffffff;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        height: 8.5rem;
       `}
     >
       {/* Render first group */}
       <div
         className={css`
           width: 50%;
-          padding: 1rem 0 1.5rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
         `}
       >
         <div className={css`
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #555555;
           `}>나의 소비 패턴</div>
@@ -42,17 +46,18 @@ function TrendCard() {
             <div
             className={css`
               padding: 5px;
-              margin-right: 1.5rem;
+              padding-right: 1.2rem;
               border-bottom: 2px solid #C6C6C6;
             `}
              key={pattern.id}>
               <span className={css`
-                  padding-right : 15px;
+                  padding-right : 10px;
                   color: #002C1B;
                   font-weight: 600;
                 `}>{index + 1}</span>
               <span className={css`
                   color: #626262;
+                  font-size: 0.95rem;
                 `}>{pattern.name}</span>
             </div>
           ))}
@@ -65,12 +70,15 @@ function TrendCard() {
           width: 50%;
           background-color: #E1E9FF;
           border-radius: 1rem;
-          padding: 1rem 0 1.5rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
         `}
       >
         <div
           className={css`
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #014886;
           `}
@@ -80,18 +88,19 @@ function TrendCard() {
             <div
               className={css`
                 padding: 5px;
-                margin-right: 1.5rem;
+                margin-right: 1rem;
                 border-bottom: 2px solid #ffffff;
               `}
              key={pattern.id}>
               <span
                 className={css`
-                  padding-right : 15px;
+                  padding-right : 10px;
                   color: #014886;
                   font-weight: 600;
                 `}>{index + 1}</span>
               <span
                 className={css`
+                  font-size: 0.95rem;
                   color: #626262;
                 `}
               >{pattern.name}</span>

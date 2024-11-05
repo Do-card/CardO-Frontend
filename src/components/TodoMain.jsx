@@ -9,22 +9,11 @@ function TodoMain() {
     { id: 3, name: "커튼 코정 핀 사기", completed: false },
   ]);
 
-  // Toggle the "completed" status when an item is clicked
-  const handleToggleComplete = (id) => {
-    setPatterns((prevPatterns) =>
-      prevPatterns.map((pattern) =>
-        pattern.id === id
-          ? { ...pattern, completed: !pattern.completed }
-          : pattern
-      )
-    );
-  };
-
   return (
     <div
       className={css`
         width: 100%;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
         display: flex;
         flex-direction: column;
         border-radius: 1rem;
@@ -35,6 +24,8 @@ function TodoMain() {
       <div
         className={css`
           display: flex;
+          flex-direction: row;
+          justify-content: space-between;
           width: 100%;
           position: relative;
         `}
@@ -42,49 +33,47 @@ function TodoMain() {
         <div
           className={css`
             padding-left: 1rem;
-            padding-top: 1rem;
-            width: 74.5%;
-            padding-bottom: 10px;
+            padding-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            width: 100%;
             font-weight: 700;
             color: #002c1b;
             background-color: #e6ffca;
-            border-radius: 1rem 1rem 0 0;
-            font-size: 31px;
+            border-radius: 0.6rem 0.6rem 0 0;
+            font-size: 1.3rem;
           `}
         >
           TODO LIST
         </div>
         <div
           className={css`
-            position: absolute;
-            top: 0;
-            right: 0;
+            position: relative;
             background-color: #e6ffca;
             border-radius: 0 1rem 0 0;
-            width: 4rem;
-            height: 4rem;
           `}
         >
           <div
             className={css`
-              position: absolute;
-              border-radius: 0 1rem;
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border-radius: 0 1rem 0 0.6rem;
               top: 0;
               right: 0;
               background-color: #ffffff;
-              width: 4rem;
-              height: 4rem;
+              width: 2.5rem;
+              height: 2.5rem;
             `}
           >
             <img
               src="/move.svg"
               alt=""
               className={css`
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                width: 2.5rem;
-                height: 2.5rem;
+                position: parent;
+                width: 1.5rem;
+                height: 1.5rem;
               `}
             />
           </div>
@@ -92,24 +81,20 @@ function TodoMain() {
       </div>
       <div
         className={css`
-          border-radius: 0 1rem 1rem 1rem;
+          border-radius: 0 0.6rem 1rem 1rem;
           padding-left: 1rem;
-          padding-bottom: 1.5rem;
+          padding-bottom: 0.8rem;
+          padding-top: 0.3rem;
           background-color: #e6ffca;
         `}
       >
         {patterns.map((pattern) => (
           <div
-            onClick={() => handleToggleComplete(pattern.id)}
             className={css`
               padding: 5px;
-              font-size: 20px;
               font-weight: 600px;
               display: flex;
               cursor: pointer;
-              ${pattern.completed
-                ? "text-decoration: line-through; color: #626262;"
-                : ""}
             `}
             key={pattern.id}
           >
@@ -122,11 +107,16 @@ function TodoMain() {
                 align-items: center;
               `}
             >
-              <img src="/checked.svg" alt="" />
+              <img src="/checked.svg" alt="" 
+                className={css`
+                  color: #002C1B;
+                  width: 1rem;
+              `}/>
             </div>
             <div
               className={css`
-                ${pattern.completed ? "color: #626262;" : "color: #002C1B;"}
+                color: #002C1B;
+                font-size: 1rem;
               `}
             >
               {pattern.name}
