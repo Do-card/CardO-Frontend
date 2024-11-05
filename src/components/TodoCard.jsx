@@ -1,8 +1,14 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useDeleteMarker, usePatchFavorite } from "../apis/Todo";
 
 function TodoCard({ Todo }) {
   const navigator = useNavigate();
+  const [todoItems, setTodoItems] = useState(Todo.items);
+  const deleteThisMarker = useDeleteMarker();
+  const updateFavorite = usePatchFavorite();
+
   const ToLocation = (location) => {
     if (location) {
       // 위치 넘기기
@@ -11,6 +17,26 @@ function TodoCard({ Todo }) {
       navigator("/addloc");
     }
   };
+
+  const handleCompleteItem = (index) => {
+    setTodoItems((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, isDone: !item.isDone } : item
+      )
+    );
+  };
+
+  const handleFavorite = () => {
+    const data = {
+      isFavorite: !Todo.isFavorite,
+    };
+    updateFavorite.mutate({ id: Todo.id, data: data });
+  };
+
+  const handleDeleteMarker = () => {
+    deleteThisMarker.mutate({ id: Todo.id });
+  };
+
   return (
     <div
       className={css`
@@ -27,7 +53,9 @@ function TodoCard({ Todo }) {
           position: absolute;
           right: 0.5rem;
           width: 1.5rem;
+          cursor: pointer;
         `}
+        onClick={() => handleDeleteMarker()}
       />
 
       {/* ToDo 파일 */}
@@ -56,13 +84,32 @@ function TodoCard({ Todo }) {
             `}
           >
             {/* 즐겨찾기 여부 */}
-            <img src="/star_grey.svg" alt="" />
+            {Todo.isFavorite ? (
+              <img
+                className={css`
+                  cursor: pointer;
+                `}
+                onClick={() => handleFavorite()}
+                src="/star_filled.svg"
+                alt=""
+              />
+            ) : (
+              <img
+                className={css`
+                  cursor: pointer;
+                `}
+                onClick={() => handleFavorite()}
+                src="/star_grey.svg"
+                alt=""
+              />
+            )}
             {/* Todo 카테고리 이름 */}
             <div
               className={css`
                 margin-left: 0.4rem;
                 font-size: 1.2rem;
                 font-weight: 800;
+                margin-block: 0.2rem;
               `}
             >
               {Todo.name}
@@ -76,7 +123,7 @@ function TodoCard({ Todo }) {
               background: radial-gradient(
                 circle at top right,
                 transparent 70%,
-                white 50%
+                ${Todo.colorBackground} 50%
               );
             `}
           ></div>
@@ -106,18 +153,26 @@ function TodoCard({ Todo }) {
           `}
         >
           {/* Todo List */}
-          {Todo.items.map((todo, index) => (
+          {todoItems.map((todo, index) => (
             <div
               key={index}
               className={css`
                 display: flex;
                 margin-bottom: 0.5rem;
               `}
+              onClick={() => handleCompleteItem(index)}
             >
-              <img src="/Unselected.svg" alt="" className={css``} />
+              {todo.isDone ? (
+                <img src="/CompletedItem.svg" alt="" />
+              ) : (
+                <img src="/UncompletedItem.svg" alt="" className={css``} />
+              )}
               <div
                 className={css`
                   margin-left: 0.5rem;
+                  ${todo.isDone
+                    ? "text-decoration: line-through; color: #626262;"
+                    : ""}
                 `}
               >
                 {todo.name}
@@ -135,7 +190,7 @@ function TodoCard({ Todo }) {
               font-size: 1rem;
               margin-top: 0.3rem;
               color: #959595;
-              background-color: ${Todo.colorBackground};
+              background-color: transparent;
             `}
           />
         </div>

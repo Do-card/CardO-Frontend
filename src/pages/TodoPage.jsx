@@ -1,57 +1,65 @@
 import { css } from "@emotion/css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoCard from "../components/TodoCard";
 import NavBar from "../components/NavBar";
+import { getAllMarkers, useAddMarker } from "../apis/Todo";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 
 function TodoPage() {
   const [keyword, setKeyword] = useState();
-  const todoList = [
-    {
-      id: 1,
-      name: "테스트마커",
-      poiId: "3",
-      latitude: 37.1436364,
-      longitude: 127.415285324,
-      colorBackground: "#ffffff",
-      favorite: false,
-      items: [
-        {
-          id: 1,
-          markerId: 1,
-          name: "테스트아이템1",
-          category: "테스트",
-          done: false,
-          deleted: false,
-        },
-        {
-          id: 2,
-          markerId: 1,
-          name: "테스트아이템2",
-          category: "테스트",
-          done: false,
-          deleted: false,
-        },
-      ],
+  const [lastId, setLastId] = useState(0);
+  const [limit, setLimit] = useState(10);
+
+  const addNewMarker = useAddMarker();
+
+  const [ref, inView] = useInView();
+
+  
+
+  const {
+    isfetching,
+    fetchNextPage,
+    data: todoList,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["todoList"],
+    queryFn: async ({ pageParam }) => {
+      console.log(pageParam);
+      const response = await getAllMarkers(keyword, pageParam.pageParam, limit);
+      return response;
     },
-    {
-      id: 2,
-      name: "테스트마커2",
-      poiId: "3",
-      latitude: 37.1436364,
-      longitude: 127.415285324,
-      colorBackground: "#F9FFDE",
-      favorite: false,
-      items: [],
+    initialPageParam: {
+      pageParam: 0,
     },
-  ];
+    getNextPageParam: (lastPage) => {
+      if (lastPage && lastPage.length > 0) {
+        return {
+          pageParam: lastPage[lastPage.length - 1].id,
+        };
+      }
+      return undefined;
+    },
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       //검색
     }
   };
 
-  const newMarker = () => {
-    // 새로운 빈 마커 추가
+  const handleNewMarker = () => {
+    const data = {
+      name: "",
+    };
+    addNewMarker.mutate({ data: data });
   };
 
   return (
@@ -93,8 +101,9 @@ function TodoPage() {
             position: absolute;
             right: 0;
             top: -3.5rem;
+            cursor: pointer;
           `}
-          onClick={newMarker()}
+          onClick={() => handleNewMarker()}
         />
         <input
           type="text"
@@ -124,9 +133,25 @@ function TodoPage() {
           `}
         />
       </div>
-      {todoList.map((todo, index) => (
-        <TodoCard Todo={todo} />
-      ))}
+      <div
+        className={css`
+          margin-top: 1rem;
+          width: 100%;
+          height: 65vh;
+          overflow: scroll;
+          ::-webkit-scrollbar {
+            display: none;
+          }
+        `}
+      >
+        {/* {todoList?.map((todo, index) => (
+          <TodoCard Todo={todo} />
+        ))} */}
+        {todoList?.pages.map((page) =>
+          page.map((data) => <TodoCard Todo={data} />)
+        )}
+        {todoList && <div ref={ref}></div>}
+      </div>
       <NavBar isSelected={"Todo"} />
     </div>
   );

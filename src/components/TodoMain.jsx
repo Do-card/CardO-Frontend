@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
 import { useState } from "react";
 
+
 function TodoMain() {
   // Define initial state with each pattern's "completed" status
   const [patterns, setPatterns] = useState([
@@ -8,6 +9,8 @@ function TodoMain() {
     { id: 2, name: "사과 5개 사기", completed: false },
     { id: 3, name: "커튼 코정 핀 사기", completed: false },
   ]);
+  
+
 
   // Toggle the "completed" status when an item is clicked
   const handleToggleComplete = (id) => {
