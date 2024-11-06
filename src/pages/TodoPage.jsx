@@ -5,17 +5,26 @@ import NavBar from "../components/NavBar";
 import { getAllMarkers, useAddMarker } from "../apis/Todo";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { Toggle } from "../components/Toggle";
 
 function TodoPage() {
   const [keyword, setKeyword] = useState();
   const [lastId, setLastId] = useState(0);
   const [limit, setLimit] = useState(10);
+  const [isAll, setIsAll] = useState(true);
 
   const addNewMarker = useAddMarker();
 
   const [ref, inView] = useInView();
 
-  
+  const colors = [
+    "#FFFFFF",
+    "#F9FFDE",
+    "#EAF6FD",
+    "#FFF9D2",
+    "#FFEEE7",
+    "#E8DBFF",
+  ];
 
   const {
     isfetching,
@@ -58,8 +67,13 @@ function TodoPage() {
   const handleNewMarker = () => {
     const data = {
       name: "",
+      colorBackground: colors[Math.floor(Math.random() * 6)],
     };
     addNewMarker.mutate({ data: data });
+  };
+
+  const handleToggle = () => {
+    setIsAll(!isAll);
   };
 
   return (
@@ -78,12 +92,34 @@ function TodoPage() {
           width: 100%;
           padding-top: 2rem;
           display: flex;
-          float: left;
-          font-size: 2.5rem;
-          font-weight: bold;
+          align-items: baseline;
         `}
       >
-        Todo
+        <div
+          className={css`
+            float: left;
+            font-size: 2.5rem;
+            font-weight: bold;
+          `}
+        >
+          Todo
+        </div>
+        <div
+          className={css`
+            margin-left: 1rem;
+            display: flex;
+            align-items: center;
+          `}
+        >
+          {/* <div
+            className={css`
+              margin-right: 0.5rem;
+            `}
+          >
+            전체
+          </div> */}
+          <Toggle onClick={handleToggle} isAll={isAll} />
+        </div>
       </div>
       <div
         className={css`
@@ -144,11 +180,8 @@ function TodoPage() {
           }
         `}
       >
-        {/* {todoList?.map((todo, index) => (
-          <TodoCard Todo={todo} />
-        ))} */}
         {todoList?.pages.map((page) =>
-          page.map((data) => <TodoCard Todo={data} />)
+          page.map((data, index) => <TodoCard Todo={data} key={index} />)
         )}
         {todoList && <div ref={ref}></div>}
       </div>

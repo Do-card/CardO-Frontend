@@ -1,9 +1,11 @@
 import { css } from "@emotion/css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePatchLocation } from "../apis/Todo";
 
-function PlaceInfo({ place, onClick }) {
+function PlaceInfo({ place, onClick, TodoId }) {
   const navigator = useNavigate();
+  const addLocation = usePatchLocation();
   const setLocation = (place) => {
     const data = {
       poiId: place.id,
@@ -11,6 +13,10 @@ function PlaceInfo({ place, onClick }) {
       latitude: place.y,
       longitude: place.x,
     };
+
+    console.log("data!!!!!!!!!!!!!!!!!", data);
+    addLocation.mutate({ id: TodoId, data: data });
+
     navigator("/todo");
   };
   return (
@@ -52,6 +58,7 @@ function PlaceInfo({ place, onClick }) {
               padding: 0.3rem 0.5rem;
               border-radius: 0.4rem;
               color: #777777;
+              cursor: pointer;
             `}
             onClick={() => setLocation(place)}
           >

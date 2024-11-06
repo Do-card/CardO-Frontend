@@ -22,7 +22,8 @@ export const getAllMarkers = async (keyword, pageParam, limit) => {
 
 export const addMarker = async (data) => {
   try {
-    const response = await axios.post("/markers", data).then((res) => {
+    console.log("add data : ", data);
+    await axios.post("/markers", data).then((res) => {
       console.log("[add New Marker Axios] : ", res);
     });
   } catch (error) {
@@ -43,7 +44,7 @@ export const useAddMarker = () => {
 
 export const deleteMarker = async (id) => {
   try {
-    const response = await axios.delete(`/markers/${id}`).then((res) => {
+    await axios.delete(`/markers/${id}`).then((res) => {
       console.log("[Delete Marker] ", res);
     });
   } catch (error) {
@@ -62,13 +63,32 @@ export const useDeleteMarker = () => {
   return mutate;
 };
 
+export const patchMarkerName = async (id, data) => {
+  try {
+    await axios.patch(`markers/${id}/style`, data).then((res) => {
+      console.log("[Patch Marker Name] : ", res);
+    });
+  } catch (error) {
+    console.error("[Patch Marker Name failed] : ", error);
+  }
+};
+
+export const useChangeMarkerName = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: (params) => patchMarkerName(params.id, params.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries("todoList");
+    },
+  });
+  return mutate;
+};
+
 export const patchFavorite = async (id, data) => {
   try {
-    const response = await axios
-      .patch(`/markers/${id}/favorite`, data)
-      .then((res) => {
-        console.log("[Change Favorite]", res);
-      });
+    await axios.patch(`/markers/${id}/favorite`, data).then((res) => {
+      console.log("[Change Favorite]", res);
+    });
   } catch (error) {
     console.error("patch Favorite error : ", error);
   }
@@ -78,6 +98,74 @@ export const usePatchFavorite = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: (params) => patchFavorite(params.id, params.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries("todoList");
+    },
+  });
+  return mutate;
+};
+
+//========================marker 장소 추가========================
+export const patchLocation = async (id, data) => {
+  try {
+    // console.log("data!!!!!!!!!!!!!!!!!", data);
+    await axios.patch(`/markers/${id}/location`, data).then((res) => {
+      console.log("[Patch Location Success] ", res);
+    });
+  } catch (error) {
+    console.error("Patch Location failed : ", error);
+  }
+};
+
+export const usePatchLocation = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: (params) => patchLocation(params.id, params.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries("todoList");
+    },
+  });
+  return mutate;
+};
+
+//========================item 관리===============================
+
+export const postItem = async (data) => {
+  try {
+    // console.log("!!!!!!!!!!!", data);
+    const response = await axios.post("/items", data).then((res) => {
+      console.log("[Post Item Success]", res);
+    });
+  } catch (error) {
+    console.error("post item failed : ", error);
+  }
+};
+
+export const usePostItem = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: (params) => postItem(params.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries("todoList");
+    },
+  });
+  return mutate;
+};
+
+export const patchItem = async (id) => {
+  try {
+    const resonse = await axios.patch(`/items/${id}`).then((res) => {
+      console.log("[patch Item Success] : ", res);
+    });
+  } catch (error) {
+    console.error("[patch item failed]", error);
+  }
+};
+
+export const usePatchItem = () => {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: (params) => patchItem(params.id),
     onSuccess: () => {
       queryClient.invalidateQueries("todoList");
     },

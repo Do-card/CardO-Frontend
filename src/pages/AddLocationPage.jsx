@@ -8,10 +8,14 @@ import {
   useKakaoLoader,
 } from "react-kakao-maps-sdk";
 import PlaceInfo from "../components/PlaceInfo";
+import { useLocation } from "react-router-dom";
 
 const { kakao } = window;
 
 function AddLocationPage() {
+  const info = useLocation();
+  const TodoId = info.state.TodoId;
+
   useKakaoLoader();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
@@ -263,7 +267,12 @@ function AddLocationPage() {
           ></div>
 
           {places.map((place, index) => (
-            <PlaceInfo place={place} key={index} onClick={() => selectedPlace(index)} />
+            <PlaceInfo
+              TodoId={TodoId}
+              place={place}
+              key={index}
+              onClick={() => selectedPlace(index)}
+            />
           ))}
         </div>
       ) : (

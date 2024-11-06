@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30000,
+      staleTime: 0,
       gcTime: 30000,
     }
   }
@@ -20,7 +20,6 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-
       <BrowserRouter>
         <div className='root'>
           <App />

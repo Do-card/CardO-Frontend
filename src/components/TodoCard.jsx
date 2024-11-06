@@ -1,29 +1,34 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDeleteMarker, usePatchFavorite } from "../apis/Todo";
+import {
+  useDeleteMarker,
+  usePatchFavorite,
+  usePatchItem,
+  usePostItem,
+} from "../apis/Todo";
+import AdjustInput from "./AdjustInput";
 
 function TodoCard({ Todo }) {
   const navigator = useNavigate();
   const [todoItems, setTodoItems] = useState(Todo.items);
   const deleteThisMarker = useDeleteMarker();
   const updateFavorite = usePatchFavorite();
+  const checkItem = usePatchItem();
+  const addItem = usePostItem();
+  const [value, setValue] = useState("");
 
-  const ToLocation = (location) => {
-    if (location) {
+  const ToLocation = (id, name) => {
+    if (name) {
       // 위치 넘기기
     } else {
       // 위치 추가 페이지로
-      navigator("/addloc");
+      navigator("/addloc", { state: { TodoId: Todo.id } });
     }
   };
 
   const handleCompleteItem = (index) => {
-    setTodoItems((prevItems) =>
-      prevItems.map((item, i) =>
-        i === index ? { ...item, isDone: !item.isDone } : item
-      )
-    );
+    checkItem.mutate({ id: index });
   };
 
   const handleFavorite = () => {
@@ -35,6 +40,17 @@ function TodoCard({ Todo }) {
 
   const handleDeleteMarker = () => {
     deleteThisMarker.mutate({ id: Todo.id });
+  };
+
+  const handleEnterDown = (e) => {
+    if (e.key === "Enter") {
+      const data = {
+        markerId: Todo.id,
+        name: e.target.value,
+      };
+      addItem.mutate({ data: data });
+      setValue("");
+    }
   };
 
   return (
@@ -104,15 +120,8 @@ function TodoCard({ Todo }) {
               />
             )}
             {/* Todo 카테고리 이름 */}
-            <div
-              className={css`
-                margin-left: 0.4rem;
-                font-size: 1.2rem;
-                font-weight: 800;
-                margin-block: 0.2rem;
-              `}
-            >
-              {Todo.name}
+            <div>
+              <AdjustInput name={Todo.name} todoId={Todo.id}></AdjustInput>
             </div>
           </div>
           <div
@@ -137,10 +146,10 @@ function TodoCard({ Todo }) {
               margin-bottom: 0.5rem;
               cursor: pointer;
             `}
-            onClick={() => ToLocation(Todo.location)}
+            onClick={() => ToLocation(Todo.poiId, Todo.poiName)}
           >
             {/* 위치 있으면 위치 이름 띄우고 없으면 위치 추가 */}
-            {Todo.location ? Todo.location : "위치 추가"}
+            {Todo.poiName ? Todo.poiName : "위치 추가"}
           </div>
         </div>
         <div
@@ -150,22 +159,31 @@ function TodoCard({ Todo }) {
             border-bottom-right-radius: 0.7rem;
             border-top-right-radius: 0.7rem;
             padding: 1rem 0.8rem;
+            box-shadow: 0 5.2px 6.5px rgb(0, 0, 0, 0.1);
           `}
         >
           {/* Todo List */}
-          {todoItems.map((todo, index) => (
+          {Todo?.items.map((todo, index) => (
             <div
               key={index}
               className={css`
                 display: flex;
                 margin-bottom: 0.5rem;
               `}
-              onClick={() => handleCompleteItem(index)}
             >
               {todo.isDone ? (
-                <img src="/CompletedItem.svg" alt="" />
+                <img
+                  src="/CompletedItem.svg"
+                  alt=""
+                  onClick={() => handleCompleteItem(todo.id)}
+                />
               ) : (
-                <img src="/UncompletedItem.svg" alt="" className={css``} />
+                <img
+                  src="/UncompletedItem.svg"
+                  alt=""
+                  className={css``}
+                  onClick={() => handleCompleteItem(todo.id)}
+                />
               )}
               <div
                 className={css`
@@ -192,6 +210,9 @@ function TodoCard({ Todo }) {
               color: #959595;
               background-color: transparent;
             `}
+            onKeyDown={handleEnterDown}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
       </div>
