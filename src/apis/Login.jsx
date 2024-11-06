@@ -9,6 +9,11 @@ export const Login = async (form) => {
     if (accessToken && refreshToken) {
       sessionStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+
+      const token = JSON.stringify({ accessToken: accessToken, refreshToken: refreshToken });
+
+      await sendTokenToApp(token);
+
       return true;
     } else {
       return false;
@@ -24,4 +29,9 @@ export const logout = async () => {
   sessionStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   window.location.reload();
+};
+
+const sendTokenToApp = async (token) => {
+  console.log(token);
+  await window.ReactNativeWebView?.postMessage(token);
 };
