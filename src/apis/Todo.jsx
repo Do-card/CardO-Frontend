@@ -1,6 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "./Axios";
 
+// 즐겨찾기된 모든 마커 조회(무한 스크롤 X)
+export const getAllFavoriteMarkers = async () => {
+  try {
+    const response = await axios.get("/markers/favorite/all").then((res) => {
+      console.log("[Get All Favorite Markers] : ", res.data.result);
+      return res.data.result;
+    });
+    return response;
+  } catch (error) {
+    console.log("getting all favorite markers failed", error);
+  }
+};
+
+// 즐겨찾기 안된 모든 마커 조회(무한 스크롤) (키워드 존재 시 즐겨찾기 포함)
 export const getAllMarkers = async (keyword, pageParam, limit) => {
   try {
     console.log("pageParam : ", pageParam);
@@ -57,6 +71,7 @@ export const useDeleteMarker = () => {
   const mutate = useMutation({
     mutationFn: (params) => deleteMarker(params.id),
     onSuccess: () => {
+      queryClient.invalidateQueries("todoFavList");
       queryClient.invalidateQueries("todoList");
     },
   });
@@ -78,6 +93,7 @@ export const useChangeMarkerName = () => {
   const mutate = useMutation({
     mutationFn: (params) => patchMarkerName(params.id, params.data),
     onSuccess: () => {
+      queryClient.invalidateQueries("todoFavList");
       queryClient.invalidateQueries("todoList");
     },
   });
@@ -99,6 +115,7 @@ export const usePatchFavorite = () => {
   const mutate = useMutation({
     mutationFn: (params) => patchFavorite(params.id, params.data),
     onSuccess: () => {
+      queryClient.invalidateQueries("todoFavList");
       queryClient.invalidateQueries("todoList");
     },
   });
@@ -122,6 +139,7 @@ export const usePatchLocation = () => {
   const mutate = useMutation({
     mutationFn: (params) => patchLocation(params.id, params.data),
     onSuccess: () => {
+      queryClient.invalidateQueries("todoFavList");
       queryClient.invalidateQueries("todoList");
     },
   });
@@ -146,6 +164,7 @@ export const usePostItem = () => {
   const mutate = useMutation({
     mutationFn: (params) => postItem(params.data),
     onSuccess: () => {
+      queryClient.invalidateQueries("todoFavList");
       queryClient.invalidateQueries("todoList");
     },
   });
@@ -167,8 +186,26 @@ export const usePatchItem = () => {
   const mutate = useMutation({
     mutationFn: (params) => patchItem(params.id),
     onSuccess: () => {
-      queryClient.invalidateQueries("todoList");
+      return Promise.all([
+        queryClient.invalidateQueries("todoFavList"),
+        queryClient.invalidateQueries("todoList"),
+      ]);
     },
   });
   return mutate;
+};
+
+//=========================Todo Map ES======================
+export const getLocalTrend = async (poiId) => {
+  try {
+    const response = await axios
+      .get(`/items/local-trend?poiId=10404144`)
+      .then((res) => {
+        console.log("[Get Local Trend] : ", res.data.result);
+        return res.data.result;
+      });
+    return response;
+  } catch (error) {
+    console.error("getting Local Trend failed : ", error);
+  }
 };

@@ -7,6 +7,7 @@ import { getCards, getUser } from "../apis/Main";
 import { useNavigate } from "react-router-dom";
 import { discountAll } from "../apis/Discount";
 import { useAsync } from "react-select/async";
+import TodoMapOverlay from "../components/TodoMapOverlay";
 
 function MainPage() {
   const [isSelected, setIsSelected] = useState(10000);
@@ -313,6 +314,14 @@ function MainPage() {
           원
         </div>
       </div>
+      {/* <div
+        className={css`
+          position: absolute;
+          top: 15rem;
+        `}
+      >
+        <TodoMapOverlay />
+      </div> */}
       {isSelected && showModal && (
         <CardModal
           setShowModal={setShowModal}

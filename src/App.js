@@ -30,7 +30,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/todo") || checkLocation("/home") || checkLocation("/card")) {
+    if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/home") || checkLocation("/card")) {
       return;
     }
     if (checkLocation("/login")) {
@@ -54,7 +54,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/" element={<MainPage />}></Route>
+        <Route path="/" element={<HomePage />}></Route>
         <Route path="/map" element={<MapPage />}></Route>
         {/* <Route path="/login" element={<LoginPage />}></Route> */}
         <Route path="/signin" element={<SignInPage />}></Route>

@@ -2,7 +2,6 @@ import { css } from "@emotion/css";
 import { useState } from "react";
 
 export const Toggle = ({ onClick, isAll }) => {
-  //   const [isToggleOn, setIsToggleOn] = useState(ToggleBool);
   return (
     <div
       className={css`

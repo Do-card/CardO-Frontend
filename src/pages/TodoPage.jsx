@@ -2,7 +2,11 @@ import { css } from "@emotion/css";
 import { useEffect, useState } from "react";
 import TodoCard from "../components/TodoCard";
 import NavBar from "../components/NavBar";
-import { getAllMarkers, useAddMarker } from "../apis/Todo";
+import {
+  getAllMarkers,
+  useAddMarker,
+  getAllFavoriteMarkers,
+} from "../apis/Todo";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Toggle } from "../components/Toggle";
@@ -25,6 +29,14 @@ function TodoPage() {
     "#FFEEE7",
     "#E8DBFF",
   ];
+
+  const { data: todoFavList } = useQuery({
+    queryKey: ["todoFavList"],
+    queryFn: async () => {
+      const response = await getAllFavoriteMarkers();
+      return response;
+    },
+  });
 
   const {
     isfetching,
@@ -74,6 +86,7 @@ function TodoPage() {
 
   const handleToggle = () => {
     setIsAll(!isAll);
+    console.log(isAll);
   };
 
   return (
@@ -180,8 +193,25 @@ function TodoPage() {
           }
         `}
       >
+        {todoFavList?.map((data, index) => (
+          <div key={index}>
+            {!isAll && data.isComplete ? (
+              <></>
+            ) : (
+              <TodoCard Todo={data} isAll={isAll} />
+            )}
+          </div>
+        ))}
         {todoList?.pages.map((page) =>
-          page.map((data, index) => <TodoCard Todo={data} key={index} />)
+          page.map((data, index) => (
+            <div key={index}>
+              {!isAll && data.isComplete ? (
+                <></>
+              ) : (
+                <TodoCard Todo={data} isAll={isAll} />
+              )}
+            </div>
+          ))
         )}
         {todoList && <div ref={ref}></div>}
       </div>

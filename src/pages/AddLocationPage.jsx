@@ -9,6 +9,7 @@ import {
 } from "react-kakao-maps-sdk";
 import PlaceInfo from "../components/PlaceInfo";
 import { useLocation } from "react-router-dom";
+import { getLocalTrend } from "../apis/Todo";
 
 const { kakao } = window;
 
@@ -21,6 +22,7 @@ function AddLocationPage() {
   const [markers, setMarkers] = useState([]);
   const [places, setPlaces] = useState([]);
   const [keyword, setKeyword] = useState("");
+
   const mapRef = useRef(null);
   const [center, setCenter] = useState({
     center: {
@@ -123,16 +125,29 @@ function AddLocationPage() {
       //   return search();
     }
   };
-  const selectedPlace = (index) => {
+  const selectedPlace = async (index, poiId) => {
+    const response = await getLocalTrend(poiId).then((res) => {
+      console.log(res);
+      return res;
+    });
+
     setPlaces((prevPlaces) =>
       prevPlaces.map((place, i) =>
         i === index
-          ? { ...place, selected: true }
+          ? { ...place, selected: true, localTrend: response }
           : { ...place, selected: false }
       )
     );
-    console.log("selected!!!!!!!!!!!!", places);
+
+    // console.log("selected!!!!!!!!!!!!", places);
   };
+
+  // const localTrendData = async (poiId) => {
+  //   return await getLocalTrend(poiId).then((res) => {
+  //     console.log(res);
+  //     return res;
+  //   });
+  // };
 
   return (
     <div
@@ -272,6 +287,7 @@ function AddLocationPage() {
               place={place}
               key={index}
               onClick={() => selectedPlace(index)}
+              // localTrend={() => getLocalTrend(place.poiId)}
             />
           ))}
         </div>

@@ -7,6 +7,7 @@ import { css } from "@emotion/css";
 import { getRecommendedCards } from "../apis/Recommend";
 import CardInfo from "../components/CardInfo";
 import CardModal from "../components/CardModal";
+import TodoMapOverlay from "../components/TodoMapOverlay";
 
 const MapPageStyle = styled.div`
   height: 100vh;
@@ -526,32 +527,44 @@ const MapPage = () => {
               >
                 <div
                   className={css`
-                    padding: 5px;
-                    background-color: white;
-                    border-radius: 0.5rem;
+                    margin-top: 2rem;
                     display: flex;
-                    flex-direction: row;
+                    flex-direction: column;
+                    align-items: center;
                   `}
                 >
-                  {getLimitedCardInfos(
-                    sortCards(markerInfo.cards, selectedCategory)
-                  ).map((cardinfo) => (
-                    <div
-                      className={css`
-                        color: ${cardinfo.colorTitle};
-                        border: 0.1rem solid ${cardinfo.colorTitle};
-                        background-color: ${cardinfo.colorBackground};
-                        border-radius: 0.3rem;
-                        margin: 0 0.2rem;
-                        padding: 0.1rem 0.2rem;
-                      `}
-                    >
-                      {getPercentageFromCardDescription(
-                        cardinfo.card.cardDescription,
-                        selectedCategory
-                      )}
-                    </div>
-                  ))}
+                  <div
+                    className={css`
+                      width: fit-content;
+                      padding: 5px;
+                      background-color: white;
+                      border-radius: 0.5rem;
+                      display: flex;
+                      flex-direction: row;
+                      margin-bottom: 0.3rem;
+                    `}
+                  >
+                    {getLimitedCardInfos(
+                      sortCards(markerInfo.cards, selectedCategory)
+                    ).map((cardinfo) => (
+                      <div
+                        className={css`
+                          color: ${cardinfo.colorTitle};
+                          border: 0.1rem solid ${cardinfo.colorTitle};
+                          background-color: ${cardinfo.colorBackground};
+                          border-radius: 0.3rem;
+                          margin: 0 0.2rem;
+                          padding: 0.1rem 0.2rem;
+                        `}
+                      >
+                        {getPercentageFromCardDescription(
+                          cardinfo.card.cardDescription,
+                          selectedCategory
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <TodoMapOverlay />
                 </div>
               </CustomOverlayMap>
             </>
@@ -699,6 +712,7 @@ const MapPage = () => {
               >
                 {clickedPlace.cards.map((info, index) => (
                   <div
+                    key={index}
                     className={css`
                       display: flex;
                       flex-direction: column;

@@ -1,11 +1,14 @@
 import { css } from "@emotion/css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePatchLocation } from "../apis/Todo";
+import { usePatchLocation, getLocalTrend } from "../apis/Todo";
 
 function PlaceInfo({ place, onClick, TodoId }) {
+  // const [localTrend, setLocalTrend] = useState();
+  // const [selected, setSelected] = useState(place.selected);
   const navigator = useNavigate();
   const addLocation = usePatchLocation();
+
   const setLocation = (place) => {
     const data = {
       poiId: place.id,
@@ -19,6 +22,25 @@ function PlaceInfo({ place, onClick, TodoId }) {
 
     navigator("/todo");
   };
+
+  // useEffect(() => {
+  //   if (selected) {
+  //     searchLocalTrend();
+  //   }
+  //   console.log(localTrend);
+  // }, [selected]);
+
+  // const searchLocalTrend = () => {
+  //   setLocalTrend(() => {
+  //     getLocalTrend(place.poiId).then((res) => {
+  //       console.log("[Local Trend Info]", res);
+  //       return res;
+  //     });
+  //   });
+  // };
+
+  // console.log("[placeInfo] ", place.localTrend);
+
   return (
     <div
       className={css`
@@ -136,6 +158,29 @@ function PlaceInfo({ place, onClick, TodoId }) {
             `}
           >
             비슷한 구매 패턴을 가진 사용자 기반의 상품 추천입니다
+          </div>
+          <div
+            className={css`
+              display: flex;
+            `}
+          >
+            {place.localTrend?.map((trend, index) => (
+              <div
+                key={index}
+                className={css`
+                  /* border: solid; */
+                  color: #777777;
+                  background-color: #f6f6f6;
+                  border-radius: 0.3rem;
+                  box-shadow: 0 0 7px rgb(0, 0, 0, 0.15);
+                  padding: 0.3rem;
+                  margin-right: 1rem;
+                  margin-top: 1rem;
+                `}
+              >
+                {trend.category}
+              </div>
+            ))}
           </div>
         </div>
       ) : (

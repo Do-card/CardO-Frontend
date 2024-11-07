@@ -9,7 +9,7 @@ import {
 } from "../apis/Todo";
 import AdjustInput from "./AdjustInput";
 
-function TodoCard({ Todo }) {
+function TodoCard({ Todo, isAll }) {
   const navigator = useNavigate();
   const [todoItems, setTodoItems] = useState(Todo.items);
   const deleteThisMarker = useDeleteMarker();
@@ -164,37 +164,42 @@ function TodoCard({ Todo }) {
         >
           {/* Todo List */}
           {Todo?.items.map((todo, index) => (
-            <div
-              key={index}
-              className={css`
-                display: flex;
-                margin-bottom: 0.5rem;
-              `}
-            >
-              {todo.isDone ? (
-                <img
-                  src="/CompletedItem.svg"
-                  alt=""
-                  onClick={() => handleCompleteItem(todo.id)}
-                />
+            <div key={index}>
+              {!isAll && todo.isDone ? (
+                <></>
               ) : (
-                <img
-                  src="/UncompletedItem.svg"
-                  alt=""
-                  className={css``}
-                  onClick={() => handleCompleteItem(todo.id)}
-                />
+                <div
+                  className={css`
+                    display: flex;
+                    margin-bottom: 0.5rem;
+                  `}
+                >
+                  {todo.isDone ? (
+                    <img
+                      src="/CompletedItem.svg"
+                      alt=""
+                      onClick={() => handleCompleteItem(todo.id)}
+                    />
+                  ) : (
+                    <img
+                      src="/UncompletedItem.svg"
+                      alt=""
+                      className={css``}
+                      onClick={() => handleCompleteItem(todo.id)}
+                    />
+                  )}
+                  <div
+                    className={css`
+                      margin-left: 0.5rem;
+                      ${todo.isDone
+                        ? "text-decoration: line-through; color: #626262;"
+                        : ""}
+                    `}
+                  >
+                    {todo.name}
+                  </div>
+                </div>
               )}
-              <div
-                className={css`
-                  margin-left: 0.5rem;
-                  ${todo.isDone
-                    ? "text-decoration: line-through; color: #626262;"
-                    : ""}
-                `}
-              >
-                {todo.name}
-              </div>
             </div>
           ))}
 
