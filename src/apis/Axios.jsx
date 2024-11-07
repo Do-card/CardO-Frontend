@@ -1,12 +1,12 @@
 import Axios from "axios";
 
-const DHurl = "http://localhost:8080";
+const DHurl = "http://70.12.246.233:8080";
 const DYurl = "http://70.12.247.61:8080/api";
 const exurl = "https://j11a107.p.ssafy.io/api";
 const url = "https://k11a402.p.ssafy.io/api";
 
 const axios = Axios.create({
-  baseURL: DHurl,
+  baseURL: url,
 });
 
 const renewToken = async () => {

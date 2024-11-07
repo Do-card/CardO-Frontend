@@ -16,6 +16,7 @@ function CardPage() {
   const [discount, setDiscount] = useState();
   const [selectedIndex, setSelectedIndex] = useState();
   const [user, setUser] = useState();
+  const [isRepresentativeSelected, setIsRepresentativeSelected] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,6 +27,9 @@ function CardPage() {
   const _showCard = (key) => {
     setSelectedIndex(key);
     // console.log(index);
+    if(isRepresentativeSelected) {
+      return;
+    }
     if (key === isSelected) {
       setIsSelected(10000);
     } else {
@@ -76,6 +80,7 @@ function CardPage() {
         const cardsInfos = res.result.map((card, index) => ({
           ...card,
           key: index + 1,
+          isRadioSelected: false
         }));
         setCards(cardsInfos);
       }
@@ -95,6 +100,16 @@ function CardPage() {
       }
     });
   };
+
+  const saveRadioButton =(cardId)=>{
+    cards.map((card)=>{
+      if(card.cardId === cardId){
+        card.isRadioSelected = true;
+      }else{
+        card.isRadioSelected = false;
+      }
+    });
+  }
 
   return (
     <div
@@ -210,6 +225,7 @@ function CardPage() {
               key={index}
               className={css`
                 position: absolute;
+                z-index: 0;
                 top: ${(index - startIndex + 2) * 3.5 +
                 (isSelected < card.key ? 11 : 1)}rem;
                 opacity: ${startIndex > card.key
@@ -222,9 +238,65 @@ function CardPage() {
                 setShowModal={setShowModal}
                 isSelected={isSelected}
                 data={card}
+                isRepresentativeSelected={isRepresentativeSelected}
               />
+              {isRepresentativeSelected && (
+                <div className={css `
+                  display: flex;
+                  z-index: 1;
+                  position: absolute;
+                  top: 10px;
+                  right: 1.5rem;
+                  width: 1.8rem;
+                  height: 1.8rem;
+                  border: 2.5px solid ${card.colorTitle};
+                  background-color: ${card.colorBackground};
+                  border-radius: 50%;
+                  justify-content: center;
+                  align-items: center;
+                  `}
+                    onClick={() => {saveRadioButton(card.cardId); }}
+                  >
+                    {card.isRadioSelected && (
+                      <div>
+                        <div  className={css `
+                          display: flex;
+                          width: 1.5rem;
+                          height: 1.5rem;
+                          background-color: ${card.colorTitle};
+                          border-radius: 50%;
+                          `}
+                          >
+                        </div>
+                      </div>
+                    )}
+                </div>
+              )}
             </div>
           ))}
+      </div>
+      <div className={css`
+        display: flex;
+        position: relative;
+        width: 20.5rem;
+        float: right;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 1rem 2rem 0rem 1rem;
+        `}>
+         <button
+          className={css`
+            color: #555555;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+          `}
+          onClick={() => { setIsRepresentativeSelected(!isRepresentativeSelected); }}
+        >
+          {isRepresentativeSelected ? "저장" : "대표카드 선택"}
+        </button>
       </div>
       <div
         className={css`
