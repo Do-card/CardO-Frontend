@@ -13,12 +13,12 @@ function TodoMain() {
     <div
       className={css`
         width: 100%;
-        margin-top: 1rem;
         display: flex;
         flex-direction: column;
         border-radius: 1rem;
         background-color: #ffffff;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        height: 10rem;
       `}
     >
       <div
@@ -33,15 +33,15 @@ function TodoMain() {
         <div
           className={css`
             padding-left: 1rem;
-            padding-top: 0.5rem;
+            padding-top: 1rem;
             display: flex;
             align-items: center;
             width: 100%;
             font-weight: 700;
             color: #002c1b;
             background-color: #e6ffca;
-            border-radius: 0.6rem 0.6rem 0 0;
-            font-size: 1.3rem;
+            border-radius: 1rem 0.6rem 0 0;
+            font-size: 1.5rem;
           `}
         >
           TODO LIST
@@ -63,8 +63,8 @@ function TodoMain() {
               top: 0;
               right: 0;
               background-color: #ffffff;
-              width: 2.5rem;
-              height: 2.5rem;
+              width: 3rem;
+              height: 3rem;
             `}
           >
             <img
@@ -72,8 +72,8 @@ function TodoMain() {
               alt=""
               className={css`
                 position: parent;
-                width: 1.5rem;
-                height: 1.5rem;
+                width: 2rem;
+                height: 2rem;
               `}
             />
           </div>
@@ -83,9 +83,11 @@ function TodoMain() {
         className={css`
           border-radius: 0 0.6rem 1rem 1rem;
           padding-left: 1rem;
-          padding-bottom: 0.8rem;
-          padding-top: 0.3rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           background-color: #e6ffca;
+          height: 100%;
         `}
       >
         {patterns.map((pattern) => (
@@ -116,7 +118,7 @@ function TodoMain() {
             <div
               className={css`
                 color: #002C1B;
-                font-size: 1rem;
+                font-size: 1.1rem;
               `}
             >
               {pattern.name}

@@ -1,13 +1,24 @@
 import { css } from "@emotion/css";
 
-function Card({ data, setShowModal, isSelected }) {
+function Card() {
   // console.log(data);
+  const data = {
+    colorTitle: "#000000",
+    colorBackground: "#ffffff",
+    title: "Card Title",
+    description: "Card Description",
+    barcode: "1234567890",
+    image: "https://example.com/image.jpg",
+    cardNo: "1234567890111",
+    cardName: "Card Name",
+    cardExpiryDate : "12345678901"
+  }
 
-  const _clickArrow = () => {
-    if (isSelected) {
-      setShowModal(true);
-    }
-  };
+  // const _clickArrow = () => {
+  //   if (isSelected) {
+  //     setShowModal(true);
+  //   }
+  // };
 
   return (
     <div
@@ -46,7 +57,7 @@ function Card({ data, setShowModal, isSelected }) {
         >
           {data.cardName}
         </div>
-        {setShowModal && (
+        {/* {setShowModal && (
           <svg
             width="32"
             height="32"
@@ -73,7 +84,7 @@ function Card({ data, setShowModal, isSelected }) {
               stroke-linejoin="round"
             />
           </svg>
-        )}
+        )} */}
       </div>
       <div
         className={css`
