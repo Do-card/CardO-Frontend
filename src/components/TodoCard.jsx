@@ -1,16 +1,58 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  useDeleteMarker,
+  usePatchFavorite,
+  usePatchItem,
+  usePostItem,
+} from "../apis/Todo";
+import AdjustInput from "./AdjustInput";
 
-function TodoCard({ Todo }) {
+function TodoCard({ Todo, isAll }) {
   const navigator = useNavigate();
-  const ToLocation = (location) => {
-    if (location) {
+  const [todoItems, setTodoItems] = useState(Todo.items);
+  const deleteThisMarker = useDeleteMarker();
+  const updateFavorite = usePatchFavorite();
+  const checkItem = usePatchItem();
+  const addItem = usePostItem();
+  const [value, setValue] = useState("");
+
+  const ToLocation = (id, name) => {
+    if (name) {
       // 위치 넘기기
     } else {
       // 위치 추가 페이지로
-      navigator("/addloc");
+      navigator("/addloc", { state: { TodoId: Todo.id } });
     }
   };
+
+  const handleCompleteItem = (index) => {
+    checkItem.mutate({ id: index });
+  };
+
+  const handleFavorite = () => {
+    const data = {
+      isFavorite: !Todo.isFavorite,
+    };
+    updateFavorite.mutate({ id: Todo.id, data: data });
+  };
+
+  const handleDeleteMarker = () => {
+    deleteThisMarker.mutate({ id: Todo.id });
+  };
+
+  const handleEnterDown = (e) => {
+    if (e.key === "Enter") {
+      const data = {
+        markerId: Todo.id,
+        name: e.target.value,
+      };
+      addItem.mutate({ data: data });
+      setValue("");
+    }
+  };
+
   return (
     <div
       className={css`
@@ -27,7 +69,9 @@ function TodoCard({ Todo }) {
           position: absolute;
           right: 0.5rem;
           width: 1.5rem;
+          cursor: pointer;
         `}
+        onClick={() => handleDeleteMarker()}
       />
 
       {/* ToDo 파일 */}
@@ -56,16 +100,28 @@ function TodoCard({ Todo }) {
             `}
           >
             {/* 즐겨찾기 여부 */}
-            <img src="/star_grey.svg" alt="" />
+            {Todo.isFavorite ? (
+              <img
+                className={css`
+                  cursor: pointer;
+                `}
+                onClick={() => handleFavorite()}
+                src="/star_filled.svg"
+                alt=""
+              />
+            ) : (
+              <img
+                className={css`
+                  cursor: pointer;
+                `}
+                onClick={() => handleFavorite()}
+                src="/star_grey.svg"
+                alt=""
+              />
+            )}
             {/* Todo 카테고리 이름 */}
-            <div
-              className={css`
-                margin-left: 0.4rem;
-                font-size: 1.2rem;
-                font-weight: 800;
-              `}
-            >
-              {Todo.name}
+            <div>
+              <AdjustInput name={Todo.name} todoId={Todo.id}></AdjustInput>
             </div>
           </div>
           <div
@@ -76,7 +132,7 @@ function TodoCard({ Todo }) {
               background: radial-gradient(
                 circle at top right,
                 transparent 70%,
-                white 50%
+                ${Todo.colorBackground} 50%
               );
             `}
           ></div>
@@ -90,10 +146,10 @@ function TodoCard({ Todo }) {
               margin-bottom: 0.5rem;
               cursor: pointer;
             `}
-            onClick={() => ToLocation(Todo.location)}
+            onClick={() => ToLocation(Todo.poiId, Todo.poiName)}
           >
             {/* 위치 있으면 위치 이름 띄우고 없으면 위치 추가 */}
-            {Todo.location ? Todo.location : "위치 추가"}
+            {Todo.poiName ? Todo.poiName : "위치 추가"}
           </div>
         </div>
         <div
@@ -103,25 +159,47 @@ function TodoCard({ Todo }) {
             border-bottom-right-radius: 0.7rem;
             border-top-right-radius: 0.7rem;
             padding: 1rem 0.8rem;
+            box-shadow: 0 5.2px 6.5px rgb(0, 0, 0, 0.1);
           `}
         >
           {/* Todo List */}
-          {Todo.items.map((todo, index) => (
-            <div
-              key={index}
-              className={css`
-                display: flex;
-                margin-bottom: 0.5rem;
-              `}
-            >
-              <img src="/Unselected.svg" alt="" className={css``} />
-              <div
-                className={css`
-                  margin-left: 0.5rem;
-                `}
-              >
-                {todo.name}
-              </div>
+          {Todo?.items.map((todo, index) => (
+            <div key={index}>
+              {!isAll && todo.isDone ? (
+                <></>
+              ) : (
+                <div
+                  className={css`
+                    display: flex;
+                    margin-bottom: 0.5rem;
+                  `}
+                >
+                  {todo.isDone ? (
+                    <img
+                      src="/CompletedItem.svg"
+                      alt=""
+                      onClick={() => handleCompleteItem(todo.id)}
+                    />
+                  ) : (
+                    <img
+                      src="/UncompletedItem.svg"
+                      alt=""
+                      className={css``}
+                      onClick={() => handleCompleteItem(todo.id)}
+                    />
+                  )}
+                  <div
+                    className={css`
+                      margin-left: 0.5rem;
+                      ${todo.isDone
+                        ? "text-decoration: line-through; color: #626262;"
+                        : ""}
+                    `}
+                  >
+                    {todo.name}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
@@ -135,8 +213,11 @@ function TodoCard({ Todo }) {
               font-size: 1rem;
               margin-top: 0.3rem;
               color: #959595;
-              background-color: ${Todo.colorBackground};
+              background-color: transparent;
             `}
+            onKeyDown={handleEnterDown}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
       </div>

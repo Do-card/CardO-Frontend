@@ -18,7 +18,6 @@ import TodoPage from "./pages/TodoPage";
 import AddLocationPage from "./pages/AddLocationPage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const navigate = useNavigate();
@@ -31,9 +30,9 @@ function App() {
   }
 
   useEffect(() => {
-    // if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/todo") || checkLocation("/home") || checkLocation("/card")) {
-    //   return;
-    // }
+    if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/home") || checkLocation("/card")) {
+      return;
+    }
     if (checkLocation("/login")) {
       return;
     }
@@ -55,7 +54,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/" element={<MainPage />}></Route>
+        <Route path="/" element={<HomePage />}></Route>
         <Route path="/map" element={<MapPage />}></Route>
         {/* <Route path="/login" element={<LoginPage />}></Route> */}
         <Route path="/signin" element={<SignInPage />}></Route>
@@ -72,7 +71,6 @@ function App() {
         <Route path="/addloc" element={<AddLocationPage />}></Route>
         {/*<Route path="/" element={<Page3 />}></Route> */}
       </Routes>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </div>
   );
 }
