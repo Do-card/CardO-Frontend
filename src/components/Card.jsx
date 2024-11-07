@@ -1,15 +1,7 @@
 import { css } from "@emotion/css";
-import { useState, useEffect } from "react";
 
-function Card() {
+function Card({ data, setShowModal, isSelected }) {
   // console.log(data);
-  const [showModal, setShowModal] = useState();
-
-  const isSelected = false;
-  const data = {
-    colorTitle : "#000000",
-    colorBackground : "#ffffff"
-  };
 
   const _clickArrow = () => {
     if (isSelected) {
@@ -52,7 +44,7 @@ function Card() {
             font-weight: 600;
           `}
         >
-          {/* {data.cardName} */}
+          {data.cardName}
         </div>
         {setShowModal && (
           <svg
@@ -94,8 +86,8 @@ function Card() {
           height: 35%;
         `}
       >
-        {/* {data.cardNo.slice(0, 4)} {data.cardNo.slice(4, 8)}{" "}
-        {data.cardNo.slice(8, 12)} {data.cardNo.slice(12, 16)} */}
+        {data.cardNo.slice(0, 4)} {data.cardNo.slice(4, 8)}{" "}
+        {data.cardNo.slice(8, 12)} {data.cardNo.slice(12, 16)}
       </div>
       <div
         className={css`
@@ -114,9 +106,8 @@ function Card() {
           margin-top: 0.5rem;
         `}
       >
-        End Date 
-        {/* {data.cardExpiryDate.slice(4, 6)}/
-        {data.cardExpiryDate.slice(2, 4)} */}
+        End Date {data.cardExpiryDate.slice(4, 6)}/
+        {data.cardExpiryDate.slice(2, 4)}
       </div>
     </div>
   );
