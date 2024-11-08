@@ -4,11 +4,12 @@ import { useState } from "react";
 const TodoMapOverlay = ({ Todo }) => {
   const [open, setOpen] = useState(false);
   // console.log("[Todo Map Overlay]", Todo);
-  
+
   return (
     <div
       className={css`
         width: 9rem;
+        ${Todo.duplicate ? "top:2.3rem;" : ""}
         position: relative;
       `}
     >
