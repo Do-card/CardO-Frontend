@@ -1,4 +1,5 @@
 import { css } from "@emotion/css";
+import { useEffect } from "react";
 
 function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
   // console.log(data);
@@ -8,6 +9,10 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
       setShowModal(true);
     }
   };
+
+  useEffect(() => {
+    console.log("data: ", data);
+  }, []);
 
   return (
     <div

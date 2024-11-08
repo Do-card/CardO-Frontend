@@ -1,15 +1,20 @@
 import { css } from "@emotion/css";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import {getAllFavoriteMarkers} from "../apis/Todo";
+import { useNavigate } from "react-router-dom";
 
 function TodoMain() {
-  // Define initial state with each pattern's "completed" status
-  const [patterns, setPatterns] = useState([
-    { id: 1, name: "립밤 사기", completed: false },
-    { id: 2, name: "사과 5개 사기", completed: false },
-    { id: 3, name: "커튼 코정 핀 사기", completed: false },
-  ]);
+  // Define initial state with each pattern's "isComplete" status
+  const [patterns, setPatterns] = useState([]);
+  const navigate = useNavigate();
   
+  useEffect(() => {
+    getAllFavoriteMarkers().then((res)=>{
+      setPatterns(res[0].items.filter((item) => {
+        return !item.isDone && item;
+      }));
+    });
+  }, []);
 
 
   return (
@@ -78,6 +83,7 @@ function TodoMain() {
                 width: 2rem;
                 height: 2rem;
               `}
+              onClick={()=>navigate("/todo")}
             />
           </div>
         </div>
@@ -85,13 +91,18 @@ function TodoMain() {
       <div
         className={css`
           border-radius: 0 0.6rem 1rem 1rem;
-          padding-left: 1rem;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           background-color: #e6ffca;
-          height: 100%;
+          padding: 0 0 1rem 1rem;
+          height: 7rem;
+          overflow: auto;
+          
+          ::-webkit-scrollbar{
+            display : none;
+          }
         `}
+        
       >
         {patterns.map((pattern) => (
           <div

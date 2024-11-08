@@ -2,8 +2,7 @@ import { css } from "@emotion/css";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCards } from "../apis/Main";
-import { getUser } from "../apis/Main";
+import { getCards, getUser, postRepresentiveCard } from "../apis/Main";
 import { discountAll } from "../apis/Discount";
 import Card from "../components/Card";
 import CardModal from "../components/CardModal";
@@ -80,7 +79,6 @@ function CardPage() {
         const cardsInfos = res.result.map((card, index) => ({
           ...card,
           key: index + 1,
-          isRadioSelected: false
         }));
         setCards(cardsInfos);
       }
@@ -104,12 +102,28 @@ function CardPage() {
   const saveRadioButton =(cardId)=>{
     cards.map((card)=>{
       if(card.cardId === cardId){
-        card.isRadioSelected = true;
+        card.isRepresentativeSelected = true;
       }else{
-        card.isRadioSelected = false;
+        card.isRepresentativeSelected = false;
       }
     });
   }
+
+  const saveRepresentCard = ()=>{
+    if(isRepresentativeSelected){
+      console.log("api 전송");
+      const request = cards.map((card) => ({
+        id: card.cardId,
+        representativeSelected: card.isRepresentativeSelected,
+      }));
+      const response = postRepresentiveCard(request);
+      console.log("response: ", response);
+    }
+
+    setIsRepresentativeSelected(!isRepresentativeSelected);
+  }
+
+  
 
   return (
     <div
@@ -257,7 +271,7 @@ function CardPage() {
                   `}
                     onClick={() => {saveRadioButton(card.cardId); }}
                   >
-                    {card.isRadioSelected && (
+                    {card.isRepresentativeSelected && (
                       <div>
                         <div  className={css `
                           display: flex;
@@ -293,7 +307,7 @@ function CardPage() {
             border: none;
             cursor: pointer;
           `}
-          onClick={() => { setIsRepresentativeSelected(!isRepresentativeSelected); }}
+          onClick={() => { saveRepresentCard(!isRepresentativeSelected); }}
         >
           {isRepresentativeSelected ? "저장" : "대표카드 선택"}
         </button>

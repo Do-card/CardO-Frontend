@@ -54,9 +54,22 @@ function TrendCard() {
             font-weight: 600;
             color: #555555;
             font-size: 1rem;
-          `}>나의 소비 패턴</div>
+          `}>{userTrend.length > 0 &&  "나의 소비 패턴"}</div>
         <div>
-          {mainTrend.map((pattern) => (
+          {userTrend.length == 0 && (
+            <div className={css`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              color: #555555;
+              font-size: 1rem;
+              font-weight: 600;
+            `}>
+              고객님의 소비가 <br/> 없어요
+            </div>
+          )}
+          {userTrend && userTrend.map((pattern) => (
             <div
             className={css`
               padding: 5px;
@@ -98,7 +111,7 @@ function TrendCard() {
           `}
         >20대 소비 패턴</div>
         <div>
-          {userTrend.map((pattern) => (
+          {mainTrend.map((pattern) => (
             <div
               className={css`
                 padding: 6px 5px;

@@ -5,9 +5,23 @@ import TrendCard from "../components/TrendCard";
 import TodoMain from "../components/TodoMain";
 import Card from "../components/Card";
 import { useNavigate } from "react-router-dom";
+import {getRepresentiveCard} from "../apis/Main";
 
 function HomePage() {
-  const hasCard = false;
+  const [card, setCard] = useState();
+  const [hasCard, setHasCard] = useState();
+  const navigate = useNavigate();
+
+  // console.log(card);
+  // if(card) setHasCard(true);
+  // else setHasCard(false);
+
+  useEffect(() => {
+    getRepresentiveCard().then((res)=> {
+        setCard(res.result);
+        return res;
+    });
+  },[]);
 
   return (
     <div
@@ -46,7 +60,7 @@ function HomePage() {
         margin-top: 0.8rem;
         width: 100%;
       `}>
-        {!hasCard ? 
+        {!card ? 
           (
             <div className={css`
               margin-top: 0.5rem;
@@ -99,7 +113,9 @@ function HomePage() {
                       border: none;
                       font-size: 0.8rem;
                       font-weight: 700;
-                    `}>
+                    `}
+                     onClick={()=>navigate("/card")}
+                    >
                     카드 등록하러 가기
                   </button>
                 </div>
@@ -123,7 +139,11 @@ function HomePage() {
                 scale: 0.9;
                 z-index : 1;
               `}>
-                  <Card/>
+                  <Card 
+                    data = {card}
+                    setShowModal = {true} 
+                    isSelected = {true}
+                    isRepresentativeSelected = {false}/>
                 </div>
               </div>
               <div className={css `
@@ -148,6 +168,7 @@ function HomePage() {
                     font-weight: 700;
                     font-size: 0.9rem;
                   `}
+                  onClick={()=> navigate("/card")}
                 >
                   카드 관리
                 </div>

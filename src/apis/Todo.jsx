@@ -5,7 +5,7 @@ import axios from "./Axios";
 export const getAllFavoriteMarkers = async () => {
   try {
     const response = await axios.get("/markers/favorite/all").then((res) => {
-      console.log("[Get All Favorite Markers] : ", res.data.result);
+      // console.log("[Get All Favorite Markers] : ", res.data.result);
       return res.data.result;
     });
     return response;
