@@ -150,10 +150,12 @@ export const usePatchLocation = () => {
 
 export const postItem = async (data) => {
   try {
-    // console.log("!!!!!!!!!!!", data);
-    const response = await axios.post("/items", data).then((res) => {
-      console.log("[Post Item Success]", res);
-    });
+    //console.log("!!!!!!!!!!!", data);
+    if (data.name !== "") {
+      const response = await axios.post("/items", data).then((res) => {
+        console.log("[Post Item Success]", res);
+      });
+    }
   } catch (error) {
     console.error("post item failed : ", error);
   }
@@ -198,12 +200,10 @@ export const usePatchItem = () => {
 //=========================Todo Map ES======================
 export const getLocalTrend = async (poiId) => {
   try {
-    const response = await axios
-      .get(`/items/local-trend?poiId=10404144`)
-      .then((res) => {
-        console.log("[Get Local Trend] : ", res.data.result);
-        return res.data.result;
-      });
+    const response = await axios.get(`/items/local-trend?poiId=10404144`).then((res) => {
+      console.log("[Get Local Trend] : ", res.data.result);
+      return res.data.result;
+    });
     return response;
   } catch (error) {
     console.error("getting Local Trend failed : ", error);

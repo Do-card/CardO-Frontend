@@ -37,8 +37,7 @@ axios.interceptors.request.use(
     if (accessToken) {
       request.headers.Authorization = `Bearer ${accessToken}`;
     } else if (refreshToken) {
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        await renewToken();
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await renewToken();
       sessionStorage.setItem("accessToken", newAccessToken);
       localStorage.setItem("refreshToken", newRefreshToken);
       request.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -52,22 +51,14 @@ axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (
-      originalRequest.url !== "/auth/logout" &&
-      originalRequest.url.includes("/auth")
-    ) {
+    if (originalRequest.url !== "/auth/logout" && originalRequest.url.includes("/auth")) {
       return error;
     }
 
     // Access token 만료 및 401 에러 발생 시 토큰 갱신 시도
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry
-    ) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 무한 루프 방지용 플래그 설정
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        await renewToken();
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await renewToken();
       sessionStorage.setItem("accessToken", newAccessToken);
       localStorage.setItem("refreshToken", newRefreshToken);
 
