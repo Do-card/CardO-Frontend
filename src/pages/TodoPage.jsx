@@ -2,11 +2,7 @@ import { css } from "@emotion/css";
 import { useEffect, useState } from "react";
 import TodoCard from "../components/TodoCard";
 import NavBar from "../components/NavBar";
-import {
-  getAllMarkers,
-  useAddMarker,
-  getAllFavoriteMarkers,
-} from "../apis/Todo";
+import { getAllMarkers, useAddMarker, getAllFavoriteMarkers } from "../apis/Todo";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Toggle } from "../components/Toggle";
@@ -17,18 +13,13 @@ function TodoPage() {
   const [limit, setLimit] = useState(10);
   const [isAll, setIsAll] = useState(true);
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
   const addNewMarker = useAddMarker();
 
   const [ref, inView] = useInView();
 
-  const colors = [
-    "#FFFFFF",
-    "#F9FFDE",
-    "#EAF6FD",
-    "#FFF9D2",
-    "#FFEEE7",
-    "#E8DBFF",
-  ];
+  const colors = ["#FFFFFF", "#F9FFDE", "#EAF6FD", "#FFF9D2", "#FFEEE7", "#E8DBFF"];
 
   const { data: todoFavList } = useQuery({
     queryKey: ["todoFavList"],
@@ -37,6 +28,20 @@ function TodoPage() {
       return response;
     },
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      // 창 높이가 줄어들면 키보드가 열렸다고 가정
+      if (window.innerHeight < 600) {
+        setIsKeyboardOpen(true);
+      } else {
+        setIsKeyboardOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const {
     isfetching,
@@ -195,27 +200,19 @@ function TodoPage() {
       >
         {todoFavList?.map((data, index) => (
           <div key={index}>
-            {!isAll && data.isComplete ? (
-              <></>
-            ) : (
-              <TodoCard Todo={data} isAll={isAll} />
-            )}
+            {!isAll && data.isComplete ? <></> : <TodoCard Todo={data} isAll={isAll} />}
           </div>
         ))}
         {todoList?.pages.map((page) =>
           page.map((data, index) => (
             <div key={index}>
-              {!isAll && data.isComplete ? (
-                <></>
-              ) : (
-                <TodoCard Todo={data} isAll={isAll} />
-              )}
+              {!isAll && data.isComplete ? <></> : <TodoCard Todo={data} isAll={isAll} />}
             </div>
           ))
         )}
         {todoList && <div ref={ref}></div>}
       </div>
-      <NavBar isSelected={"Todo"} />
+      {isKeyboardOpen ? <></> : <NavBar isSelected={"Todo"} />}
     </div>
   );
 }
