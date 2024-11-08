@@ -3,34 +3,8 @@ import { useState } from "react";
 
 const TodoMapOverlay = ({ Todo }) => {
   const [open, setOpen] = useState(false);
-  console.log("[Todo Map Overlay]", Todo);
-  // const Todo = {
-  //   id: 1,
-  //   name: "마커 이름 수정",
-  //   poiId: "124",
-  //   latitude: 37.3591581,
-  //   longitude: 127.10541654,
-  //   colorBackground: "#DC8A02",
-  //   isFavorite: true,
-  //   items: [
-  //     {
-  //       id: 1,
-  //       markerId: 1,
-  //       name: "테스트아이템1",
-  //       category: "테스트",
-  //       isDone: false,
-  //       isDeleted: false,
-  //     },
-  //     {
-  //       id: 2,
-  //       markerId: 1,
-  //       name: "테스트아이템2",
-  //       category: "테스트",
-  //       isDone: false,
-  //       isDeleted: false,
-  //     },
-  //   ],
-  // };
+  // console.log("[Todo Map Overlay]", Todo);
+  
   return (
     <div
       className={css`
