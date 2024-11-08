@@ -1,19 +1,33 @@
 import { css } from "@emotion/css";
 import { useEffect, useState, useRef } from "react";
+import {trendAll} from "../apis/Home";
 
 function TrendCard() {
-  // Define two separate pattern groups
-  const patternGroup1 = [
-    { id: 1, name: "초코우유" },
-    { id: 2, name: "커피우유" },
-    { id: 3, name: "딸기우유" }
-  ];
+  const [mainTrend, setMainTrend] = useState([]);
+  const [userTrend, setUserTrend] = useState([]);
 
-  const patternGroup2 = [
-    { id: 4, name: "사과주스" },
-    { id: 5, name: "오렌지주스" },
-    { id: 6, name: "망고주스" }
-  ];
+  // Fetch data and update pattern groups
+  const getTrend = async () => {
+    const response = await trendAll().then((res) => {
+      console.log(res);
+      return res;
+    });
+
+    if (response) {
+      setMainTrend(response.result.mainTrend);
+      setUserTrend(response.result.userTrend);
+    } else {
+      console.log("No response received.");
+    }
+  };
+
+  const truncateText = (text) => {
+    return text.length > 7 ? `${text.slice(0, 7)} ..` : text;
+  };
+
+  useEffect(() => {
+    getTrend();
+  }, []);
 
   return (
     <div
@@ -23,78 +37,99 @@ function TrendCard() {
         border-radius:1rem;
         background-color: #ffffff;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        height: 9.5rem;
       `}
-    >
-      {/* Render first group */}
+      >
       <div
         className={css`
           width: 50%;
-          padding: 1rem 0 1.5rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
         `}
       >
         <div className={css`
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #555555;
-          `}>나의 소비 패턴</div>
+            font-size: 1rem;
+          `}>{userTrend.length > 0 &&  "나의 소비 패턴"}</div>
         <div>
-          {patternGroup1.map((pattern, index) => (
+          {userTrend.length == 0 && (
+            <div className={css`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              color: #555555;
+              font-size: 1rem;
+              font-weight: 600;
+            `}>
+              고객님의 소비가 <br/> 없어요
+            </div>
+          )}
+          {userTrend && userTrend.map((pattern) => (
             <div
             className={css`
               padding: 5px;
-              margin-right: 1.5rem;
               border-bottom: 2px solid #C6C6C6;
             `}
              key={pattern.id}>
               <span className={css`
-                  padding-right : 15px;
+                  padding-right : 10px;
                   color: #002C1B;
                   font-weight: 600;
-                `}>{index + 1}</span>
+                `}>{pattern.rank}</span>
               <span className={css`
                   color: #626262;
-                `}>{pattern.name}</span>
+                  font-size: 1rem;
+                `}>
+                  {truncateText(pattern.category)}
+              </span>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Render second group */}
       <div
         className={css`
           width: 50%;
+          padding: 10px 0 ;
           background-color: #E1E9FF;
           border-radius: 1rem;
-          padding: 1rem 0 1.5rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
         `}
       >
         <div
           className={css`
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #014886;
           `}
         >20대 소비 패턴</div>
         <div>
-          {patternGroup2.map((pattern, index) => (
+          {mainTrend.map((pattern) => (
             <div
               className={css`
-                padding: 5px;
-                margin-right: 1.5rem;
+                padding: 6px 5px;
                 border-bottom: 2px solid #ffffff;
               `}
              key={pattern.id}>
               <span
                 className={css`
-                  padding-right : 15px;
+                  padding-right : 10px;
                   color: #014886;
                   font-weight: 600;
-                `}>{index + 1}</span>
+                `}>{pattern.rank}</span>
               <span
                 className={css`
+                  font-size: 1rem;
                   color: #626262;
                 `}
-              >{pattern.name}</span>
+              >{truncateText(pattern.category)}</span>
             </div>
           ))}
         </div>

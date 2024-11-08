@@ -2,8 +2,7 @@ import { css } from "@emotion/css";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCards } from "../apis/Main";
-import { getUser } from "../apis/Main";
+import { getCards, getUser, postRepresentiveCard } from "../apis/Main";
 import { discountAll } from "../apis/Discount";
 import Card from "../components/Card";
 import CardModal from "../components/CardModal";
@@ -16,6 +15,7 @@ function CardPage() {
   const [discount, setDiscount] = useState();
   const [selectedIndex, setSelectedIndex] = useState();
   const [user, setUser] = useState();
+  const [isRepresentativeSelected, setIsRepresentativeSelected] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,6 +26,9 @@ function CardPage() {
   const _showCard = (key) => {
     setSelectedIndex(key);
     // console.log(index);
+    if(isRepresentativeSelected) {
+      return;
+    }
     if (key === isSelected) {
       setIsSelected(10000);
     } else {
@@ -95,6 +98,32 @@ function CardPage() {
       }
     });
   };
+
+  const saveRadioButton =(cardId)=>{
+    cards.map((card)=>{
+      if(card.cardId === cardId){
+        card.isRepresentativeSelected = true;
+      }else{
+        card.isRepresentativeSelected = false;
+      }
+    });
+  }
+
+  const saveRepresentCard = ()=>{
+    if(isRepresentativeSelected){
+      console.log("api 전송");
+      const request = cards.map((card) => ({
+        id: card.cardId,
+        representativeSelected: card.isRepresentativeSelected,
+      }));
+      const response = postRepresentiveCard(request);
+      console.log("response: ", response);
+    }
+
+    setIsRepresentativeSelected(!isRepresentativeSelected);
+  }
+
+  
 
   return (
     <div
@@ -210,6 +239,7 @@ function CardPage() {
               key={index}
               className={css`
                 position: absolute;
+                z-index: 0;
                 top: ${(index - startIndex + 2) * 3.5 +
                 (isSelected < card.key ? 11 : 1)}rem;
                 opacity: ${startIndex > card.key
@@ -222,9 +252,65 @@ function CardPage() {
                 setShowModal={setShowModal}
                 isSelected={isSelected}
                 data={card}
+                isRepresentativeSelected={isRepresentativeSelected}
               />
+              {isRepresentativeSelected && (
+                <div className={css `
+                  display: flex;
+                  z-index: 1;
+                  position: absolute;
+                  top: 10px;
+                  right: 1.5rem;
+                  width: 1.8rem;
+                  height: 1.8rem;
+                  border: 2.5px solid ${card.colorTitle};
+                  background-color: ${card.colorBackground};
+                  border-radius: 50%;
+                  justify-content: center;
+                  align-items: center;
+                  `}
+                    onClick={() => {saveRadioButton(card.cardId); }}
+                  >
+                    {card.isRepresentativeSelected && (
+                      <div>
+                        <div  className={css `
+                          display: flex;
+                          width: 1.5rem;
+                          height: 1.5rem;
+                          background-color: ${card.colorTitle};
+                          border-radius: 50%;
+                          `}
+                          >
+                        </div>
+                      </div>
+                    )}
+                </div>
+              )}
             </div>
           ))}
+      </div>
+      <div className={css`
+        display: flex;
+        position: relative;
+        width: 20.5rem;
+        float: right;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 1rem 2rem 0rem 1rem;
+        `}>
+         <button
+          className={css`
+            color: #555555;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+          `}
+          onClick={() => { saveRepresentCard(!isRepresentativeSelected); }}
+        >
+          {isRepresentativeSelected ? "저장" : "대표카드 선택"}
+        </button>
       </div>
       <div
         className={css`

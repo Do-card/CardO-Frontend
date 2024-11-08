@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
+import { useEffect } from "react";
 
-function Card({ data, setShowModal, isSelected }) {
+function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
   // console.log(data);
 
   const _clickArrow = () => {
@@ -8,6 +9,10 @@ function Card({ data, setShowModal, isSelected }) {
       setShowModal(true);
     }
   };
+
+  useEffect(() => {
+    console.log("data: ", data);
+  }, []);
 
   return (
     <div
@@ -46,7 +51,7 @@ function Card({ data, setShowModal, isSelected }) {
         >
           {data.cardName}
         </div>
-        {setShowModal && (
+        {!isRepresentativeSelected ? (
           <svg
             width="32"
             height="32"
@@ -73,6 +78,8 @@ function Card({ data, setShowModal, isSelected }) {
               stroke-linejoin="round"
             />
           </svg>
+        ):(
+          <div className={css`height: 2rem;`}></div>
         )}
       </div>
       <div
