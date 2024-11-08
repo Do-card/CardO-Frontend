@@ -53,6 +53,15 @@ function TodoCard({ Todo, isAll }) {
     }
   };
 
+  const handleOnBlurItem = (e) => {
+    const data = {
+      markerId: Todo.id,
+      name: e.target.value,
+    };
+    addItem.mutate({ data: data });
+    setValue("");
+  };
+
   return (
     <div
       className={css`
@@ -144,6 +153,7 @@ function TodoCard({ Todo, isAll }) {
               font-weight: 500;
               margin-left: 0.5rem;
               margin-bottom: 0.5rem;
+              /* max-width: 8rem; */
               cursor: pointer;
             `}
             onClick={() => ToLocation(Todo.poiId, Todo.poiName)}
@@ -216,6 +226,7 @@ function TodoCard({ Todo, isAll }) {
               background-color: transparent;
             `}
             onKeyDown={handleEnterDown}
+            onBlur={handleOnBlurItem}
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />

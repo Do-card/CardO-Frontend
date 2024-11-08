@@ -1,35 +1,10 @@
 import { css } from "@emotion/css";
 import { useState } from "react";
 
-const TodoMapOverlay = () => {
+const TodoMapOverlay = ({ Todo }) => {
   const [open, setOpen] = useState(false);
-  const Todo = {
-    id: 1,
-    name: "마커 이름 수정",
-    poiId: "124",
-    latitude: 37.3591581,
-    longitude: 127.10541654,
-    colorBackground: "#DC8A02",
-    isFavorite: true,
-    items: [
-      {
-        id: 1,
-        markerId: 1,
-        name: "테스트아이템1",
-        category: "테스트",
-        isDone: false,
-        isDeleted: false,
-      },
-      {
-        id: 2,
-        markerId: 1,
-        name: "테스트아이템2",
-        category: "테스트",
-        isDone: false,
-        isDeleted: false,
-      },
-    ],
-  };
+  // console.log("[Todo Map Overlay]", Todo);
+  
   return (
     <div
       className={css`
@@ -91,8 +66,9 @@ const TodoMapOverlay = () => {
             box-sizing: border-box;
           `}
         >
-          {Todo.items.map((item, index) => (
+          {Todo?.items.map((item, index) => (
             <div
+              key={index}
               className={css`
                 width: 100%;
                 display: flex;
@@ -112,7 +88,6 @@ const TodoMapOverlay = () => {
                 className={css`
                   color: black;
                 `}
-                key={index}
               >
                 {item.name}
               </div>

@@ -11,7 +11,7 @@ import MyPage from "./pages/MyPage";
 import CardSelectPage from "./pages/CardSelectPage";
 import DiscountPage from "./pages/DiscountPage";
 import CardRecommendPage from "./pages/CardRecommendPage";
-import TMapPage from "./pages/TMapPage";
+// import TMapPage from "./pages/TMapPage";
 import HomePage from "./pages/HomePage";
 import CardPage from "./pages/CardPage";
 import TodoPage from "./pages/TodoPage";
@@ -64,7 +64,7 @@ function App() {
         <Route path="/card-select" element={<CardSelectPage />}></Route>
         <Route path="/discount" element={<DiscountPage />}></Route>
         <Route path="/recommend" element={<CardRecommendPage />}></Route>
-        <Route path="/tmap" element={<TMapPage />}></Route>
+        {/* <Route path="/tmap" element={<TMapPage />}></Route> */}
         <Route path="/home" element={<HomePage />}></Route>
         <Route path="/card" element={<CardPage />}></Route>
         <Route path="/todo" element={<TodoPage />}></Route>

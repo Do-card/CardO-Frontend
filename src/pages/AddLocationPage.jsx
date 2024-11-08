@@ -11,6 +11,7 @@ import PlaceInfo from "../components/PlaceInfo";
 import { useLocation } from "react-router-dom";
 import { getLocalTrend } from "../apis/Todo";
 
+
 const { kakao } = window;
 
 function AddLocationPage() {
