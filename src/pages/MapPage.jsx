@@ -8,6 +8,7 @@ import { getRecommendedCards } from "../apis/Recommend";
 import CardInfo from "../components/CardInfo";
 import CardModal from "../components/CardModal";
 import TodoMapOverlay from "../components/TodoMapOverlay";
+import { getMarkersNearby } from "../apis/Map";
 
 const MapPageStyle = styled.div`
   height: 100vh;
@@ -87,6 +88,7 @@ const MapPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("카페");
   const [keyword, setKeyword] = useState(""); // 검색어
   const [clickedPlace, setClickedPlace] = useState(null); // 선택된 장소
+  const [todos, setTodos] = useState({});
 
   useEffect(() => {
     // const initialPosition = -window.innerHeight * 0.8;
@@ -206,6 +208,7 @@ const MapPage = () => {
 
   const [isMountedSelectedCategory, setIsMountedSelectedCategory] =
     useState(false);
+
   useEffect(() => {
     if (isMountedSelectedCategory) {
       getPlacesInWindow();
@@ -255,9 +258,10 @@ const MapPage = () => {
     // console.log("[status]", status);
     if (status === kakao.maps.services.Status.OK) {
       // console.log("[PLACE DATA FROM KAKAOMAP API]", data);
-      getCardRecommendation(data).then((res) => {
+      getCardRecommendation(data).then(async (res) => {
         // console.log("[RES]", res);
-        const sortDescRes = res.map((place) => {
+        const totalList = [];
+        const sortDescRes = await res.map((place) => {
           // 새로운 배열로 반환
           // console.log("[place]", place);
           return {
@@ -280,27 +284,55 @@ const MapPage = () => {
           };
         });
         //
-        // console.log("[sortDescRes]", sortDescRes);
-        setMarkers(sortDescRes);
+        sortDescRes.map((item) => totalList.push(item));
+        console.log("[totalList]", totalList);
+        const todoRes = await getMarkersNearby({
+          latitude: mapCenter.lat,
+          longitude: mapCenter.lng,
+        }).then((res) => {
+          console.log("[Map page todo 찍기]", res);
+          return res;
+        });
+        todoRes.map((item) => totalList.push(item));
+        // totalList.push(todoRes);
+
+        setMarkers(totalList);
       });
+
+      // getMarkersNearby({
+      //   latitude: mapCenter.lat,
+      //   longitude: mapCenter.lng,
+      // }).then((res) => {
+      //   console.log("[Map page todo 찍기]", res);
+      //   setMarkers((prev) => {
+      //     if (prev) {
+      //       const newlist = {
+      //         ...prev,
+      //         res,
+      //       };
+      //       // newlist.push(res);
+      //       return newlist;
+      //     }
+      //   });
+      // });
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       setMarkers([]);
     }
   };
 
-  // @deprecated
-  const addPlacesSearchIW = (data, status) => {
-    if (status === kakao.maps.services.Status.OK) {
-      // console.log("[PLACE DATA FROM KAKAOMAP API]", data);
-      getCardRecommendation(data).then((res) => {
-        let tempMarkers = markers;
-        for (var i = 0; i < res.length; i++) {
-          tempMarkers.push(res[i]);
-        }
-        setMarkers(tempMarkers);
-      });
-    }
-  };
+  // // @deprecated
+  // const addPlacesSearchIW = (data, status) => {
+  //   if (status === kakao.maps.services.Status.OK) {
+  //     // console.log("[PLACE DATA FROM KAKAOMAP API]", data);
+  //     getCardRecommendation(data).then((res) => {
+  //       let tempMarkers = markers;
+  //       for (var i = 0; i < res.length; i++) {
+  //         tempMarkers.push(res[i]);
+  //       }
+  //       setMarkers(tempMarkers);
+  //     });
+  //   }
+  // };
 
   const getCardRecommendation = async (data) => {
     let mapRequestDtos = { mapRequestDtos: [] };
@@ -457,8 +489,9 @@ const MapPage = () => {
       {/*<InputField onChange={handleKeyword} />*/}
       <CategoryContainer>
         {["카페", "음식점", "편의점", "주유소", "문화시설", "대형마트"].map(
-          (text) => (
+          (text, index) => (
             <div
+              key={index}
               className={css`
                 --height: 2rem;
                 background-color: ${selectedCategory === text
@@ -509,8 +542,8 @@ const MapPage = () => {
           />
         )}
         {markers?.length > 0 &&
-          markers?.map((markerInfo) => (
-            <>
+          markers?.map((markerInfo, index) => (
+            <div key={index}>
               <MapMarker // 장소 마커 생성
                 position={{
                   lat: markerInfo.latitude,
@@ -533,41 +566,50 @@ const MapPage = () => {
                     align-items: center;
                   `}
                 >
-                  <div
-                    className={css`
-                      width: fit-content;
-                      padding: 5px;
-                      background-color: white;
-                      border-radius: 0.5rem;
-                      display: flex;
-                      flex-direction: row;
-                      margin-bottom: 0.3rem;
-                    `}
-                  >
-                    {getLimitedCardInfos(
-                      sortCards(markerInfo.cards, selectedCategory)
-                    ).map((cardinfo) => (
-                      <div
-                        className={css`
-                          color: ${cardinfo.colorTitle};
-                          border: 0.1rem solid ${cardinfo.colorTitle};
-                          background-color: ${cardinfo.colorBackground};
-                          border-radius: 0.3rem;
-                          margin: 0 0.2rem;
-                          padding: 0.1rem 0.2rem;
-                        `}
-                      >
-                        {getPercentageFromCardDescription(
-                          cardinfo.card.cardDescription,
-                          selectedCategory
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <TodoMapOverlay />
+                  {!markerInfo.poiName && (
+                    <div
+                      className={css`
+                        width: fit-content;
+                        padding: 5px;
+                        background-color: white;
+                        border-radius: 0.5rem;
+                        display: flex;
+                        flex-direction: row;
+                        margin-bottom: 0.3rem;
+                      `}
+                    >
+                      {getLimitedCardInfos(
+                        sortCards(markerInfo.cards, selectedCategory)
+                      ).map((cardinfo, index) => (
+                        <div
+                          key={index}
+                          className={css`
+                            color: ${cardinfo.colorTitle};
+                            border: 0.1rem solid ${cardinfo.colorTitle};
+                            background-color: ${cardinfo.colorBackground};
+                            border-radius: 0.3rem;
+                            margin: 0 0.2rem;
+                            padding: 0.1rem 0.2rem;
+                          `}
+                        >
+                          {getPercentageFromCardDescription(
+                            cardinfo.card.cardDescription,
+                            selectedCategory
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {markerInfo.poiName ? (
+                    <>
+                      <TodoMapOverlay Todo={markerInfo} />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </CustomOverlayMap>
-            </>
+            </div>
           ))}
       </Map>
       <div
