@@ -260,7 +260,7 @@ const MapPage = () => {
     if (status === kakao.maps.services.Status.OK) {
       //console.log("[PLACE DATA FROM KAKAOMAP API]", data);
       getCardRecommendation(data).then(async (res) => {
-        console.log("[RES]", res);
+        //console.log("[RES]", res);
         const totalList = [];
         const markerSet = new Set();
 
@@ -268,7 +268,7 @@ const MapPage = () => {
           markerSet.add(place.latitude + " " + place.longitude);
 
           // 새로운 배열로 반환
-          console.log("[place]", place);
+          //console.log("[place]", place);
           return {
             ...place, // place의 나머지 속성 복사
             cards: place.cards.map((card) => {
