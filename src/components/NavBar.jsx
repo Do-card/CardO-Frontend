@@ -59,9 +59,7 @@ function NavBar({ isSelected }) {
               box-sizing: border-box;
               background-color: ${isSelected === menu ? "black" : "white"};
               border-radius: 3rem;
-              box-shadow: ${isSelected === menu
-                ? "0 0 10px rgba(0, 0, 0, 0.15)"
-                : "none"};
+              box-shadow: ${isSelected === menu ? "0 0 10px rgba(0, 0, 0, 0.15)" : "none"};
 
               display: flex;
               justify-content: center;
