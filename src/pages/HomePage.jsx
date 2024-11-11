@@ -6,10 +6,12 @@ import TodoMain from "../components/TodoMain";
 import Card from "../components/Card";
 import { useNavigate } from "react-router-dom";
 import {getRepresentiveCard} from "../apis/Main";
+import CardModal from "../components/CardModal";
 
 function HomePage() {
   const [card, setCard] = useState();
-  const [hasCard, setHasCard] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [isSelected, setIsSelected] = useState(10000);
   const navigate = useNavigate();
 
   // console.log(card);
@@ -34,6 +36,12 @@ function HomePage() {
         padding: 0 2rem;        
       `}
     >
+      {isSelected && showModal && (
+        <CardModal
+          setShowModal={setShowModal}
+          data={card}
+        ></CardModal>
+      )}
       <div
         className={css`
           width: 100%;
@@ -50,14 +58,14 @@ function HomePage() {
       <TrendCard />
       <div className={css`
         display: flex;
-        margin-top: 1.2em;
+        margin-top: 2em;
         width: 100%;
       `}>
         <TodoMain />
       </div>
       <div className={css`
         display: flex;
-        margin-top: 0.8rem;
+        margin-top: 1.5rem;
         width: 100%;
       `}>
         {!card ? 
@@ -135,13 +143,13 @@ function HomePage() {
                 <div className={css`
                 display: flex;
                 position: relative;
-                left: -4.5%;
-                scale: 0.9;
+                left: -3%;
+                scale: 0.95;
                 z-index : 1;
               `}>
                   <Card 
                     data = {card}
-                    setShowModal = {true} 
+                    setShowModal = {setShowModal} 
                     isSelected = {true}
                     isRepresentativeSelected = {false}/>
                 </div>
