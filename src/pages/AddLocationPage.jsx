@@ -255,6 +255,7 @@ function AddLocationPage() {
             border-top-right-radius: 20px;
             box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
             padding-top: 0.5rem;
+            padding-bottom: 6rem; // 짤리는 거 수정
             box-sizing: border-box;
             overflow: scroll;
             ::-webkit-scrollbar {
