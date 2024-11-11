@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-function SquareButton({ name, onClick, marginTop }) {
+function SquareButton({ name, onClick, marginTop, hoverColor="#b0ffa3" }) {
   return (
     <button
       className={css`
@@ -15,7 +15,7 @@ function SquareButton({ name, onClick, marginTop }) {
         cursor: pointer;
         &:hover {
           color: black;
-          background-color: #b0ffa3;
+          background-color: ${hoverColor};
         }
         margin-top: ${marginTop};
       `}
