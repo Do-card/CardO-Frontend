@@ -1,5 +1,6 @@
 import { css } from "@emotion/css";
 import InfoInput from "../components/InfoInput";
+import BirthInput from "../components/BrithInput";
 import SquareButton from "../components/Button/SquareButton";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -190,14 +191,14 @@ function SignInPage() {
           `}
           ref={datepickerRef}
         >
-          <InfoInput
+          <BirthInput
             title={"Birthday"}
             type={"text"}
             placeholder={"생년월일"}
             onChange={handleBirthday}
             value={birthday}
             onClick={setSelectedDate}
-          ></InfoInput>
+          ></BirthInput>
           <img
             src={`/Calendar.svg`}
             alt=""
