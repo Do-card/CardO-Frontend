@@ -2,23 +2,20 @@ import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
-  useDeleteMarker,
   usePatchFavorite,
   usePatchItem,
   usePostItem,
 } from "../apis/Todo";
 import AdjustInput from "./AdjustInput";
 
-function TodoCard({ Todo, isAll }) {
+function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
   const navigator = useNavigate();
-  const [todoItems, setTodoItems] = useState(Todo.items);
-  const deleteThisMarker = useDeleteMarker();
   const updateFavorite = usePatchFavorite();
   const checkItem = usePatchItem();
   const addItem = usePostItem();
   const [value, setValue] = useState("");
 
-  const ToLocation = (id, name) => {
+  const ToLocation = (name) => {
     if (name) {
       // 위치 넘기기
     } else {
@@ -36,10 +33,6 @@ function TodoCard({ Todo, isAll }) {
       isFavorite: !Todo.isFavorite,
     };
     updateFavorite.mutate({ id: Todo.id, data: data });
-  };
-
-  const handleDeleteMarker = () => {
-    deleteThisMarker.mutate({ id: Todo.id });
   };
 
   const handleEnterDown = (e) => {
@@ -62,6 +55,11 @@ function TodoCard({ Todo, isAll }) {
     setValue("");
   };
 
+  const handleDelete = () => {
+    setIdOnDelete(Todo.id);
+    onDelete();
+  }
+
   return (
     <div
       className={css`
@@ -80,7 +78,7 @@ function TodoCard({ Todo, isAll }) {
           width: 1.5rem;
           cursor: pointer;
         `}
-        onClick={() => handleDeleteMarker()}
+        onClick={() => handleDelete()}
       />
 
       {/* ToDo 파일 */}
@@ -156,7 +154,7 @@ function TodoCard({ Todo, isAll }) {
               /* max-width: 8rem; */
               cursor: pointer;
             `}
-            onClick={() => ToLocation(Todo.poiId, Todo.poiName)}
+            onClick={() => ToLocation(Todo.poiName)}
           >
             {/* 위치 있으면 위치 이름 띄우고 없으면 위치 추가 */}
             {Todo.poiName ? Todo.poiName : "위치 추가"}
@@ -184,20 +182,11 @@ function TodoCard({ Todo, isAll }) {
                     margin-bottom: 0.5rem;
                   `}
                 >
-                  {todo.isDone ? (
-                    <img
-                      src="/CompletedItem.svg"
-                      alt=""
-                      onClick={() => handleCompleteItem(todo.id)}
-                    />
-                  ) : (
-                    <img
-                      src="/UncompletedItem.svg"
-                      alt=""
-                      className={css``}
-                      onClick={() => handleCompleteItem(todo.id)}
-                    />
-                  )}
+                  <img
+                    src={todo.isDone ? "/CompletedItem.svg" : "/UncompletedItem.svg"}
+                    alt=""
+                    onClick={() => handleCompleteItem(todo.id)}
+                  />
                   <div
                     className={css`
                       margin-left: 0.5rem;
