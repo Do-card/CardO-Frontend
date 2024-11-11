@@ -1,5 +1,14 @@
 import { css } from "@emotion/css";
-function InfoInput({ title, type, placeholder, onChange, children, onKeyDown }) {
+function InfoInput({ title, type, placeholder, onChange, children, onKeyDown, value, onClick }) {
+  const date = value
+    ? value.getFullYear() +
+      "-" +
+      (value.getMonth() > 9 ? "" : "0") +
+      value.getMonth() +
+      "-" +
+      (value.getDate() > 9 ? "" : "0") +
+      value.getDate()
+    : "";
   return (
     <div
       className={css`
@@ -40,6 +49,9 @@ function InfoInput({ title, type, placeholder, onChange, children, onKeyDown }) 
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        value={date}
+        readOnly={true}
+        onClick={() => onClick(true)}
       />
       {children}
     </div>

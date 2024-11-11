@@ -97,19 +97,13 @@ function CardModal({ setShowModal, data }) {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <circle
-              cx="15.75"
-              cy="15.75"
-              r="14.75"
-              stroke={data.colorTitle}
-              stroke-width="2"
-            />
+            <circle cx="15.75" cy="15.75" r="14.75" stroke={data.colorTitle} strokeWidth="2" />
             <path
               d="M7.625 15.5H23.375M23.375 15.5L15.5 7.625M23.375 15.5L15.5 23.375"
               stroke={data.colorTitle}
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>

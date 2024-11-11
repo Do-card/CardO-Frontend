@@ -196,19 +196,13 @@ function MainPage() {
                 `}
                 onClick={_addCard}
               >
-                <circle
-                  cx="15.75"
-                  cy="15.75"
-                  r="14.75"
-                  stroke="black"
-                  stroke-width="2"
-                />
+                <circle cx="15.75" cy="15.75" r="14.75" stroke="black" strokeWidth="2" />
                 <path
                   d="M15.5 7.625V23.375M7.625 15.5H23.375"
                   stroke="#1E1E1E"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -221,19 +215,14 @@ function MainPage() {
               key={index}
               className={css`
                 position: absolute;
-                top: ${(index - startIndex + 2) * 3.5 +
-                (isSelected < card.key ? 11 : 1)}rem;
+                top: ${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem;
                 opacity: ${startIndex > card.key
                   ? 0
                   : 1}; /* startIndex와 현재 데이터 key가 같으면 사라짐 */
               `}
               onClick={() => _showCard(card.key)}
             >
-              <Card
-                setShowModal={setShowModal}
-                isSelected={isSelected}
-                data={card}
-              />
+              <Card setShowModal={setShowModal} isSelected={isSelected} data={card} />
             </div>
           ))}
       </div>
@@ -281,19 +270,13 @@ function MainPage() {
               navigate("/discount");
             }}
           >
-            <circle
-              cx="15.75"
-              cy="15.75"
-              r="14.75"
-              stroke="white"
-              stroke-width="2"
-            />
+            <circle cx="15.75" cy="15.75" r="14.75" stroke="white" strokeWidth="2" />
             <path
               d="M9.9375 21.5625L21.5625 9.9375M21.5625 9.9375H9.9375M21.5625 9.9375V21.5625"
               stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -308,10 +291,7 @@ function MainPage() {
             height: 50%;
           `}
         >
-          총{" "}
-          {discount &&
-            discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          원
+          총 {discount && discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
         </div>
       </div>
       {/* <div
@@ -323,10 +303,7 @@ function MainPage() {
         <TodoMapOverlay />
       </div> */}
       {isSelected && showModal && (
-        <CardModal
-          setShowModal={setShowModal}
-          data={cards[selectedIndex - 1]}
-        ></CardModal>
+        <CardModal setShowModal={setShowModal} data={cards[selectedIndex - 1]}></CardModal>
       )}
       <NavBar isSelected={"Home"} />
     </div>
