@@ -2,20 +2,24 @@ import { css } from "@emotion/css";
 import { useEffect, useState } from "react";
 import TodoCard from "../components/TodoCard";
 import NavBar from "../components/NavBar";
-import { getAllMarkers, useAddMarker, getAllFavoriteMarkers } from "../apis/Todo";
+import { getAllMarkers, useAddMarker, getAllFavoriteMarkers, useDeleteMarker } from "../apis/Todo";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Toggle } from "../components/Toggle";
+import ConfirmModal from "../components/ConfirmModal"
 
 function TodoPage() {
-  const [keyword, setKeyword] = useState();
-  const [lastId, setLastId] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [keyword, setKeyword] = useState("");
+  const [limit, _] = useState(10);
   const [isAll, setIsAll] = useState(true);
+  const [isKeywordEmpty, setIsKeywordEmpty] = useState(true);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(true);
+  const [deleteTodoId, setDeleteTodoId] = useState(0);
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   const addNewMarker = useAddMarker();
+  const deleteMarker = useDeleteMarker();
 
   const [ref, inView] = useInView();
 
@@ -52,7 +56,6 @@ function TodoPage() {
   } = useInfiniteQuery({
     queryKey: ["todoList"],
     queryFn: async ({ pageParam }) => {
-      console.log(pageParam);
       const response = await getAllMarkers(keyword, pageParam.pageParam, limit);
       return response;
     },
@@ -77,7 +80,8 @@ function TodoPage() {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      //검색
+      setIsKeywordEmpty(keyword.length === 0);
+      refetch();
     }
   };
 
@@ -87,12 +91,25 @@ function TodoPage() {
       colorBackground: colors[Math.floor(Math.random() * 6)],
     };
     addNewMarker.mutate({ data: data });
+    refetch();
   };
 
   const handleToggle = () => {
     setIsAll(!isAll);
-    console.log(isAll);
   };
+
+  const handleDeleteMarker = () => {
+    deleteMarker.mutate({ id: deleteTodoId });
+    setIsConfirmModalOpen(false);
+  }
+
+  const handleCancelModal = () => {
+    setIsConfirmModalOpen(false);
+  }
+
+  const handleConfirmModalOpen = () => {
+    setIsConfirmModalOpen(true);
+  }
 
   return (
     <div
@@ -105,6 +122,14 @@ function TodoPage() {
         padding: 0 2rem;
       `}
     >
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        setShowModal={setIsConfirmModalOpen}
+        // title="확인"
+        message="정말 삭제할까요?"
+        onConfirm={() => handleDeleteMarker()}
+        onCancel={() => handleCancelModal()}
+      />
       <div
         className={css`
           width: 100%;
@@ -129,13 +154,6 @@ function TodoPage() {
             align-items: center;
           `}
         >
-          {/* <div
-            className={css`
-              margin-right: 0.5rem;
-            `}
-          >
-            전체
-          </div> */}
           <Toggle onClick={handleToggle} isAll={isAll} />
         </div>
       </div>
@@ -198,15 +216,19 @@ function TodoPage() {
           }
         `}
       >
-        {todoFavList?.map((data, index) => (
-          <div key={index}>
-            {!isAll && data.isComplete ? <></> : <TodoCard Todo={data} isAll={isAll} />}
+        {isKeywordEmpty && todoFavList?.map((data) => (
+          <div key={data.id}>
+            {!isAll && data.isComplete
+            ? <></>
+            : <TodoCard Todo={data} isAll={isAll} onDelete={handleConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
           </div>
         ))}
         {todoList?.pages.map((page) =>
-          page.map((data, index) => (
-            <div key={index}>
-              {!isAll && data.isComplete ? <></> : <TodoCard Todo={data} isAll={isAll} />}
+          page.map((data) => (
+            <div key={data.id}>
+              {(!isAll && data.isComplete) || (!isKeywordEmpty && data.items.length === 0)
+              ? <></>
+              : <TodoCard Todo={data} isAll={isAll} onDelete={handleConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
             </div>
           ))
         )}
