@@ -28,7 +28,7 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
         align-items: center;
         box-shadow: 0 0 5px rgb(0, 0, 0, 0.15);
         box-sizing: border-box;
-        cursor: pointer;
+        cursor: Default;
       `}
     >
       <div

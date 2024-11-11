@@ -38,6 +38,7 @@ function TrendCard() {
         background-color: #ffffff;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         height: 9.5rem;
+        cursor: Default;
       `}
     >
       <div

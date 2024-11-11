@@ -53,6 +53,7 @@ function TodoMain() {
             background-color: #e6ffca;
             border-radius: 1rem 0.6rem 0 0;
             font-size: 1.5rem;
+            cursor: Default;
           `}
         >
           TODO LIST
@@ -85,6 +86,7 @@ function TodoMain() {
                 position: parent;
                 width: 2rem;
                 height: 2rem;
+                cursor: pointer;
               `}
               onClick={() => navigate("/todo")}
             />

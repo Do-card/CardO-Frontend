@@ -1,12 +1,7 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  useDeleteMarker,
-  usePatchFavorite,
-  usePatchItem,
-  usePostItem,
-} from "../apis/Todo";
+import { useDeleteMarker, usePatchFavorite, usePatchItem, usePostItem } from "../apis/Todo";
 import AdjustInput from "./AdjustInput";
 
 function TodoCard({ Todo, isAll }) {
@@ -201,9 +196,7 @@ function TodoCard({ Todo, isAll }) {
                   <div
                     className={css`
                       margin-left: 0.5rem;
-                      ${todo.isDone
-                        ? "text-decoration: line-through; color: #626262;"
-                        : ""}
+                      ${todo.isDone ? "text-decoration: line-through; color: #626262;" : ""}
                     `}
                   >
                     {todo.name}

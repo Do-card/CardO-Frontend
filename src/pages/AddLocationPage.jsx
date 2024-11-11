@@ -1,16 +1,10 @@
 import { css } from "@emotion/css";
 import { useEffect, useState, useRef } from "react";
 import NavBar from "../components/NavBar";
-import {
-  Map,
-  MapMarker,
-  CustomOverlayMap,
-  useKakaoLoader,
-} from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
 import PlaceInfo from "../components/PlaceInfo";
 import { useLocation } from "react-router-dom";
 import { getLocalTrend } from "../apis/Todo";
-
 
 const { kakao } = window;
 
@@ -289,7 +283,6 @@ function AddLocationPage() {
               place={place}
               key={index}
               onClick={() => selectedPlace(index)}
-              // localTrend={() => getLocalTrend(place.poiId)}
             />
           ))}
         </div>

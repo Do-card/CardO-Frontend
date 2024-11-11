@@ -200,12 +200,13 @@ export const usePatchItem = () => {
 //=========================Todo Map ES======================
 export const getLocalTrend = async (poiId) => {
   try {
-    const response = await axios.get(`/items/local-trend?poiId=10404144`).then((res) => {
-      console.log("[Get Local Trend] : ", res.data.result);
+    const response = await axios.get(`/items/local-trend?poiId=${poiId}`).then((res) => {
+      //console.log(`[Get Local Trend] : ${poiId}`, res.data.result);
       return res.data.result;
     });
     return response;
   } catch (error) {
     console.error("getting Local Trend failed : ", error);
+    return [];
   }
 };

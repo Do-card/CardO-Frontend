@@ -144,6 +144,7 @@ function CardPage() {
           float: left;
           font-size: 2.5rem;
           font-weight: bold;
+          cursor: Default;
         `}
       >
         Card
@@ -197,6 +198,7 @@ function CardPage() {
                   color: black;
                   font-size: 1.3rem;
                   font-weight: 600;
+                  cursor: Default;
                 `}
               >
                 새 카드 등록
@@ -321,6 +323,7 @@ function CardPage() {
           border-radius: 1.3rem;
           align-items: center;
           margin-top: 1.3rem;
+          cursor: Default;
         `}
       >
         <div

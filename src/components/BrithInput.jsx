@@ -22,6 +22,7 @@ function InfoInput({ title, type, placeholder, onChange, children, onKeyDown, va
           color: #959595;
           font-weight: bold;
           font-size: 1.2rem;
+          cursor: Default;
         `}
       >
         {title}

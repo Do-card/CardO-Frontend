@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { usePatchLocation, getLocalTrend } from "../apis/Todo";
 
 function PlaceInfo({ place, onClick, TodoId }) {
-  // const [localTrend, setLocalTrend] = useState();
+  const [localTrend, setLocalTrend] = useState([]);
   // const [selected, setSelected] = useState(place.selected);
   const navigator = useNavigate();
   const addLocation = usePatchLocation();
+
+  console.log(place.place_name);
 
   const setLocation = (place) => {
     const data = {
@@ -22,6 +24,15 @@ function PlaceInfo({ place, onClick, TodoId }) {
 
     navigator("/todo");
   };
+
+  const setTrend = async () => {
+    const data = await getLocalTrend(place.id);
+    setLocalTrend(data);
+  };
+
+  useEffect(() => {
+    setTrend();
+  }, []);
 
   // useEffect(() => {
   //   if (selected) {
@@ -164,23 +175,27 @@ function PlaceInfo({ place, onClick, TodoId }) {
               display: flex;
             `}
           >
-            {place.localTrend?.map((trend, index) => (
-              <div
-                key={index}
-                className={css`
-                  /* border: solid; */
-                  color: #777777;
-                  background-color: #f6f6f6;
-                  border-radius: 0.3rem;
-                  box-shadow: 0 0 7px rgb(0, 0, 0, 0.15);
-                  padding: 0.3rem;
-                  margin-right: 1rem;
-                  margin-top: 1rem;
-                `}
-              >
-                {trend.category}
-              </div>
-            ))}
+            {localTrend.length > 0 ? (
+              localTrend.map((trend, index) => (
+                <div
+                  key={index}
+                  className={css`
+                    /* border: solid; */
+                    color: #777777;
+                    background-color: #f6f6f6;
+                    border-radius: 0.3rem;
+                    box-shadow: 0 0 7px rgb(0, 0, 0, 0.15);
+                    padding: 0.3rem;
+                    margin-right: 1rem;
+                    margin-top: 1rem;
+                  `}
+                >
+                  {trend.category}
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       ) : (

@@ -118,6 +118,7 @@ function TodoPage() {
             float: left;
             font-size: 2.5rem;
             font-weight: bold;
+            cursor: Default;
           `}
         >
           Todo
