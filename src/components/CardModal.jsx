@@ -4,6 +4,7 @@ import BarcodeItem from "./BarcodeItem";
 
 function CardModal({ setShowModal, data }) {
   // console.log("[MODAL DATA]", data);
+
   const handleScroll = (event) => {
     event.stopPropagation(); // 스크롤 이벤트 전파 중단
   };
@@ -96,6 +97,7 @@ function CardModal({ setShowModal, data }) {
             viewBox="0 0 32 32"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            onClick={()=> setShowModal(false)}
           >
             <circle
               cx="15.75"
@@ -229,6 +231,7 @@ function CardModal({ setShowModal, data }) {
                 className={css`
                   width: 100%;
                   margin: 0.3rem 0;
+                  font-size: 1rem;
                 `}
               >
                 국내 전용 10,000원
