@@ -40,7 +40,7 @@ function CardInfo({ data, backgroundColor }) {
       >
         <div
           className={css`
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #555555;
             margin-bottom: 0.7rem;
