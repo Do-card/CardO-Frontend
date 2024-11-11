@@ -1,21 +1,24 @@
 import { css } from "@emotion/css";
 import { useState, useEffect } from "react";
-import {getAllFavoriteMarkers} from "../apis/Todo";
+import { getAllFavoriteMarkers } from "../apis/Todo";
 import { useNavigate } from "react-router-dom";
 
 function TodoMain() {
   // Define initial state with each pattern's "isComplete" status
   const [patterns, setPatterns] = useState([]);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    getAllFavoriteMarkers().then((res)=>{
-      setPatterns(res[0].items.filter((item) => {
-        return !item.isDone && item;
-      }));
+    getAllFavoriteMarkers().then((res) => {
+      if (res.length > 0) {
+        setPatterns(
+          res[0].items.filter((item) => {
+            return !item.isDone && item;
+          })
+        );
+      }
     });
   }, []);
-
 
   return (
     <div
@@ -83,7 +86,7 @@ function TodoMain() {
                 width: 2rem;
                 height: 2rem;
               `}
-              onClick={()=>navigate("/todo")}
+              onClick={() => navigate("/todo")}
             />
           </div>
         </div>
@@ -97,48 +100,94 @@ function TodoMain() {
           padding: 0 0 1rem 1rem;
           height: 7rem;
           overflow: auto;
-          
-          ::-webkit-scrollbar{
-            display : none;
+
+          ::-webkit-scrollbar {
+            display: none;
           }
         `}
-        
       >
-        {patterns.map((pattern) => (
+        {patterns.length > 0 ? (
+          patterns.map((pattern) => (
+            <div
+              className={css`
+                padding: 5px;
+                font-weight: 600px;
+                display: flex;
+                cursor: pointer;
+              `}
+              key={pattern.id}
+            >
+              <div
+                className={css`
+                  padding-right: 15px;
+                  color: #002c1b;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                `}
+              >
+                <img
+                  src="/checked.svg"
+                  alt=""
+                  className={css`
+                    color: #002c1b;
+                    width: 1rem;
+                  `}
+                />
+              </div>
+              <div
+                className={css`
+                  color: #002c1b;
+                  font-size: 1.1rem;
+                `}
+              >
+                {pattern.name}
+              </div>
+            </div>
+          ))
+        ) : (
           <div
             className={css`
-              padding: 5px;
-              font-weight: 600px;
+              font-size: 1.3rem;
               display: flex;
-              cursor: pointer;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: end;
+              width: 100%;
+              height: 100%;
             `}
-            key={pattern.id}
           >
-            <div
+            <span
               className={css`
-                padding-right: 15px;
-                color: #002c1b;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                padding-bottom: 1rem;
+                font-size: 1rem;
+                color: #6c6c6c;
               `}
             >
-              <img src="/checked.svg" alt="" 
-                className={css`
-                  color: #002C1B;
-                  width: 1rem;
-              `}/>
-            </div>
-            <div
+              등록된 TODO가 없습니다.
+            </span>
+            <button
               className={css`
-                color: #002C1B;
-                font-size: 1.1rem;
+                background-color: #6c6c6c;
+                color: #ffffff;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                font-size: 1rem;
+                width: fit-content;
+                border: none;
+                font-size: 0.8rem;
+                font-weight: 700;
               `}
+              onClick={() => navigate("/todo")}
             >
-              {pattern.name}
-            </div>
+              TODO 등록하러 가기
+            </button>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
