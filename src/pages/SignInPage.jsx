@@ -13,6 +13,7 @@ function SignInPage() {
   const [passwordCheck, setPasswordCheck] = useState();
   const [name, setName] = useState();
   const [nickname, setNickname] = useState();
+  const [birthday, setBirthday] = useState();
   const [isSamePassword, setIsSamePassword] = useState();
   const [signinFail, setSigninFail] = useState();
 
@@ -43,13 +44,19 @@ function SignInPage() {
   const handleNickname = (e) => {
     setNickname(e.target.value);
   };
+  const handleBirthday = (e) => {
+    setBirthday(e.target.value);
+  };
   const signIn = async () => {
     const data = {
       name: name,
       email: email,
       password: password,
       nickName: nickname,
+      birthday: birthday,
     };
+
+    console.log(data);
     const response = await register(data).then((res) => {
       return res;
     });
@@ -66,10 +73,11 @@ function SignInPage() {
   };
 
   const login = async () => {
-    const form = new FormData();
-    form.append("username", email);
-    form.append("password", password);
-    const response = await Login(form).then((res) => {
+    const data = {
+      email: email,
+      password: password,
+    };
+    const response = await Login(data).then((res) => {
       return res;
     });
     if (response) {
@@ -149,17 +157,18 @@ function SignInPage() {
               </div>
             ))}
         </InfoInput>
-        <InfoInput
-          title={"Name"}
-          type={"text"}
-          placeholder={"이름"}
-          onChange={handleNameChange}
-        />
+        <InfoInput title={"Name"} type={"text"} placeholder={"이름"} onChange={handleNameChange} />
         <InfoInput
           title={"Nickname"}
           type={"text"}
           placeholder={"닉네임"}
           onChange={handleNickname}
+        />
+        <InfoInput
+          title={"Birthday"}
+          type={"text"}
+          placeholder={"생년월일"}
+          onChange={handleBirthday}
         />
         {signinFail ? (
           <div
