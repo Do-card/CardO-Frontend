@@ -6,6 +6,8 @@ import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { getTransactionAll } from "../apis/Mypage";
+import { logout } from "../apis/Login";
+import SquareButton from "../components/Button/SquareButton";
 
 function MyPage() {
   const navigate = useNavigate();
@@ -126,6 +128,20 @@ function MyPage() {
         `}
       >
         My Page
+        <div className={css`
+          width:50%;
+          display:flex;
+          padding:0.3rem;
+          flex-direction: row-reverse;
+          // justify-content: center;
+          
+          `}>
+          <SquareButton
+            name={"로그아웃"}
+            hoverColor={"gray"}
+            onClick={()=> {logout();}}
+          />
+        </div>
       </div>
 
       {/* 도넛 차트 */}
