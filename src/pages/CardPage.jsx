@@ -76,7 +76,7 @@ function CardPage() {
     await getCards().then((res) => {
       // console.log("[Main Page] card response", res.result);
       if (res) {
-        const cardsInfos = res.result.map((card, index) => ({
+        const cardsInfos = res?.result.map((card, index) => ({
           ...card,
           key: index + 1,
         }));

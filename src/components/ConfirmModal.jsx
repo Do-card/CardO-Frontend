@@ -51,7 +51,7 @@ function ConfirmModal({ isOpen, onConfirm, onCancel, title, message }) {
           className={css`
             display: flex;
             justify-content: center;
-            width: 70%;
+            width: ${onConfirm ? "70%" : "40%"};
             gap: 1.2rem;
           `}
         >
