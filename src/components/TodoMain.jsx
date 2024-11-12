@@ -10,7 +10,7 @@ function TodoMain() {
 
   useEffect(() => {
     getAllFavoriteMarkers().then((res) => {
-      if (res.length > 0) {
+      if (res?.length > 0) {
         setPatterns(
           res[0].items.filter((item) => {
             return !item.isDone && item;

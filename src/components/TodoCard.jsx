@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePatchFavorite, usePatchItem, usePostItem } from "../apis/Todo";
 import AdjustInput from "./AdjustInput";
 
-function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
+function TodoCard({ Todo, isAll, onDelete, setIdOnDelete, onChangeLocation, setIdOnChangeLocation }) {
   const navigator = useNavigate();
   const updateFavorite = usePatchFavorite();
   const checkItem = usePatchItem();
@@ -13,7 +13,8 @@ function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
 
   const ToLocation = (name) => {
     if (name) {
-      // 위치 넘기기
+      setIdOnChangeLocation(Todo.id);
+      onChangeLocation();
     } else {
       // 위치 추가 페이지로
       navigator("/addloc", { state: { TodoId: Todo.id } });

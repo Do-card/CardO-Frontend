@@ -20,7 +20,9 @@ function HomePage() {
 
   useEffect(() => {
     getRepresentiveCard().then((res) => {
-      setCard(res.result);
+      if (res){
+        setCard(res.result);
+      }
       return res;
     });
   }, []);
