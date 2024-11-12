@@ -64,6 +64,7 @@ function LoginPage() {
         <img
           className={css`
             width: 60%;
+            margin-top: 5rem;
           `}
           src="/Logo.svg"
           alt=""
