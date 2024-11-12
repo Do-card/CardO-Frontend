@@ -7,7 +7,7 @@ function SquareButton({ name, onClick, marginTop, hoverColor="#b0ffa3" }) {
         border-radius: 0.6rem;
         color: white;
         border: none;
-        width: 50%;
+        width: 100%;
         height: 2.6rem;
         font-size: 1rem;
         font-weight: bold;
