@@ -28,7 +28,7 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
         align-items: center;
         box-shadow: 0 0 5px rgb(0, 0, 0, 0.15);
         box-sizing: border-box;
-        cursor: pointer;
+        cursor: Default;
       `}
     >
       <div
@@ -63,23 +63,21 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
             `}
             onClick={_clickArrow}
           >
-            <circle
-              cx="15.75"
-              cy="15.75"
-              r="14.75"
-              stroke={data.colorTitle}
-              stroke-width="2"
-            />
+            <circle cx="15.75" cy="15.75" r="14.75" stroke={data.colorTitle} strokeWidth="2" />
             <path
               d="M7.625 15.5H23.375M23.375 15.5L15.5 7.625M23.375 15.5L15.5 23.375"
               stroke={data.colorTitle}
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
-        ):(
-          <div className={css`height: 2rem;`}></div>
+        ) : (
+          <div
+            className={css`
+              height: 2rem;
+            `}
+          ></div>
         )}
       </div>
       <div
@@ -93,8 +91,8 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
           height: 35%;
         `}
       >
-        {data.cardNo.slice(0, 4)} {data.cardNo.slice(4, 8)}{" "}
-        {data.cardNo.slice(8, 12)} {data.cardNo.slice(12, 16)}
+        {data.cardNo.slice(0, 4)} {data.cardNo.slice(4, 8)} {data.cardNo.slice(8, 12)}{" "}
+        {data.cardNo.slice(12, 16)}
       </div>
       <div
         className={css`
@@ -113,8 +111,7 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
           margin-top: 0.5rem;
         `}
       >
-        End Date {data.cardExpiryDate.slice(4, 6)}/
-        {data.cardExpiryDate.slice(2, 4)}
+        End Date {data.cardExpiryDate.slice(4, 6)}/{data.cardExpiryDate.slice(2, 4)}
       </div>
     </div>
   );

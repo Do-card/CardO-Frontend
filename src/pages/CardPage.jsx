@@ -26,7 +26,7 @@ function CardPage() {
   const _showCard = (key) => {
     setSelectedIndex(key);
     // console.log(index);
-    if(isRepresentativeSelected) {
+    if (isRepresentativeSelected) {
       return;
     }
     if (key === isSelected) {
@@ -55,8 +55,8 @@ function CardPage() {
 
   useEffect(() => {
     let startY = 0; // 터치 시작 위치
-    let endY = 0;   // 터치 종료 위치
-  
+    let endY = 0; // 터치 종료 위치
+
     const handleScroll = (direction) => {
       if (direction === "down" && cards) {
         setStartIndex((prevIndex) => Math.min(prevIndex + 1, cards.length - 3)); // 아래로 스크롤 시 증가
@@ -64,33 +64,33 @@ function CardPage() {
         setStartIndex((prevIndex) => Math.max(prevIndex - 1, 1)); // 위로 스크롤 시 감소
       }
     };
-  
+
     const handleWheel = (e) => {
       const scrollDirection = e.deltaY > 0 ? "down" : "up"; // deltaY를 이용하여 스크롤 방향 확인
       handleScroll(scrollDirection);
     };
-  
+
     const handleTouchStart = (e) => {
       startY = e.touches[0].clientY; // 터치 시작 위치 저장
     };
-  
+
     const handleTouchMove = (e) => {
       endY = e.touches[0].clientY; // 터치 이동 위치 저장
     };
-  
+
     const handleTouchEnd = () => {
       const scrollDirection = endY > startY ? "up" : "down"; // 터치 방향 감지
       handleScroll(scrollDirection);
     };
-  
+
     window.addEventListener("wheel", handleWheel); // 스크롤 이벤트 등록
     window.addEventListener("touchstart", handleTouchStart); // 터치 시작 이벤트 등록
     window.addEventListener("touchmove", handleTouchMove); // 터치 이동 이벤트 등록
     window.addEventListener("touchend", handleTouchEnd); // 터치 종료 이벤트 등록
-  
+
     // 페이지 로드 후 처음 스크롤이 자동으로 발생하도록 상태 설정
     setStartIndex(1); // 또는 적절한 값으로 초기 설정
-  
+
     return () => {
       window.removeEventListener("wheel", handleWheel); // 컴포넌트 언마운트 시 이벤트 제거
       window.removeEventListener("touchstart", handleTouchStart);
@@ -126,18 +126,18 @@ function CardPage() {
     });
   };
 
-  const saveRadioButton =(cardId)=>{
-    cards.map((card)=>{
-      if(card.cardId === cardId){
+  const saveRadioButton = (cardId) => {
+    cards.map((card) => {
+      if (card.cardId === cardId) {
         card.isRepresentativeSelected = true;
-      }else{
+      } else {
         card.isRepresentativeSelected = false;
       }
     });
-  }
+  };
 
-  const saveRepresentCard = ()=>{
-    if(isRepresentativeSelected){
+  const saveRepresentCard = () => {
+    if (isRepresentativeSelected) {
       console.log("api 전송");
       const request = cards.map((card) => ({
         id: card.cardId,
@@ -148,9 +148,7 @@ function CardPage() {
     }
 
     setIsRepresentativeSelected(!isRepresentativeSelected);
-  }
-
-  
+  };
 
   return (
     <div
@@ -173,6 +171,7 @@ function CardPage() {
           float: left;
           font-size: 2.5rem;
           font-weight: bold;
+          cursor: Default;
         `}
       >
         Card
@@ -226,6 +225,7 @@ function CardPage() {
                   color: black;
                   font-size: 1.3rem;
                   font-weight: 600;
+                  cursor: Default;
                 `}
               >
                 새 카드 등록
@@ -241,19 +241,13 @@ function CardPage() {
                 `}
                 onClick={_addCard}
               >
-                <circle
-                  cx="15.75"
-                  cy="15.75"
-                  r="14.75"
-                  stroke="black"
-                  stroke-width="2"
-                />
+                <circle cx="15.75" cy="15.75" r="14.75" stroke="black" strokeWidth="2" />
                 <path
                   d="M15.5 7.625V23.375M7.625 15.5H23.375"
                   stroke="#1E1E1E"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -266,13 +260,14 @@ function CardPage() {
               key={index}
               className={css`
                 position: absolute;
-                z-index: ${isSelected === card.key ? 1 : 0}; /* 클릭된 카드의 z-index를 높여서 시각적 우선순위를 줌 */
-                top: ${isSelected === card.key 
-                  ? "5rem"   // 클릭된 카드는 화면 상단 가까이에 위치
-                  : `${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem`
-                };
+                z-index: ${isSelected === card.key
+                  ? 1
+                  : 0}; /* 클릭된 카드의 z-index를 높여서 시각적 우선순위를 줌 */
+                top: ${isSelected === card.key
+                  ? "5rem" // 클릭된 카드는 화면 상단 가까이에 위치
+                  : `${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem`};
                 opacity: ${startIndex > card.key ? 0 : 1};
-              transition: top 0.3s ease-out, opacity 0.3s ease-out;
+                transition: top 0.3s ease-out, opacity 0.3s ease-out;
               `}
               onClick={() => _showCard(card.key)}
             >
@@ -283,50 +278,55 @@ function CardPage() {
                 isRepresentativeSelected={isRepresentativeSelected}
               />
               {isRepresentativeSelected && (
-                <div className={css `
-                  display: flex;
-                  z-index: 1;
-                  position: absolute;
-                  top: 10px;
-                  right: 1.5rem;
-                  width: 1.8rem;
-                  height: 1.8rem;
-                  border: 2.5px solid ${card.colorTitle};
-                  background-color: ${card.colorBackground};
-                  border-radius: 50%;
-                  justify-content: center;
-                  align-items: center;
+                <div
+                  className={css`
+                    display: flex;
+                    z-index: 1;
+                    position: absolute;
+                    top: 10px;
+                    right: 1.5rem;
+                    width: 1.8rem;
+                    height: 1.8rem;
+                    border: 2.5px solid ${card.colorTitle};
+                    background-color: ${card.colorBackground};
+                    border-radius: 50%;
+                    justify-content: center;
+                    align-items: center;
                   `}
-                    onClick={() => {saveRadioButton(card.cardId); }}
-                  >
-                    {card.isRepresentativeSelected && (
-                      <div>
-                        <div  className={css `
+                  onClick={() => {
+                    saveRadioButton(card.cardId);
+                  }}
+                >
+                  {card.isRepresentativeSelected && (
+                    <div>
+                      <div
+                        className={css`
                           display: flex;
                           width: 1.5rem;
                           height: 1.5rem;
                           background-color: ${card.colorTitle};
                           border-radius: 50%;
-                          `}
-                          >
-                        </div>
-                      </div>
-                    )}
+                        `}
+                      ></div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ))}
       </div>
-      <div className={css`
-        display: flex;
-        position: relative;
-        width: 20.5rem;
-        float: right;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 1rem 2rem 0rem 1rem;
-        `}>
-         <button
+      <div
+        className={css`
+          display: flex;
+          position: relative;
+          width: 20.5rem;
+          float: right;
+          justify-content: flex-end;
+          align-items: center;
+          padding: 1rem 2rem 0rem 1rem;
+        `}
+      >
+        <button
           className={css`
             color: #555555;
             font-size: 1rem;
@@ -335,7 +335,9 @@ function CardPage() {
             border: none;
             cursor: pointer;
           `}
-          onClick={() => { saveRepresentCard(!isRepresentativeSelected); }}
+          onClick={() => {
+            saveRepresentCard(!isRepresentativeSelected);
+          }}
         >
           {isRepresentativeSelected ? "저장" : "대표카드 선택"}
         </button>
@@ -351,6 +353,7 @@ function CardPage() {
           border-radius: 1.3rem;
           align-items: center;
           margin-top: 1.3rem;
+          cursor: Default;
         `}
       >
         <div
@@ -384,19 +387,13 @@ function CardPage() {
               navigate("/discount");
             }}
           >
-            <circle
-              cx="15.75"
-              cy="15.75"
-              r="14.75"
-              stroke="white"
-              stroke-width="2"
-            />
+            <circle cx="15.75" cy="15.75" r="14.75" stroke="white" strokeWidth="2" />
             <path
               d="M9.9375 21.5625L21.5625 9.9375M21.5625 9.9375H9.9375M21.5625 9.9375V21.5625"
               stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -411,17 +408,11 @@ function CardPage() {
             height: 50%;
           `}
         >
-          총{" "}
-          {discount &&
-            discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          원
+          총 {discount && discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
         </div>
       </div>
       {isSelected && showModal && (
-        <CardModal
-          setShowModal={setShowModal}
-          data={cards[selectedIndex - 1]}
-        ></CardModal>
+        <CardModal setShowModal={setShowModal} data={cards[selectedIndex - 1]}></CardModal>
       )}
       <NavBar isSelected={"Card"} />
     </div>

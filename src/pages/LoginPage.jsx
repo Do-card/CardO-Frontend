@@ -21,9 +21,9 @@ function LoginPage() {
 
   const login = async () => {
     const form = {
-      "email": userId,
-      "password": password
-    }
+      email: userId,
+      password: password,
+    };
     const response = await Login(form).then((res) => {
       return res;
     });
@@ -133,6 +133,7 @@ function LoginPage() {
             margin-top: 1rem;
             color: #959595;
             font-size: 0.8rem;
+            cursor: Default;
           `}
         >
           아직 회원이 아니신가요?{" "}

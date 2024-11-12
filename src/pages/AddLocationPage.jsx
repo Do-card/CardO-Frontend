@@ -1,16 +1,10 @@
 import { css } from "@emotion/css";
 import { useEffect, useState, useRef } from "react";
 import NavBar from "../components/NavBar";
-import {
-  Map,
-  MapMarker,
-  CustomOverlayMap,
-  useKakaoLoader,
-} from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from "react-kakao-maps-sdk";
 import PlaceInfo from "../components/PlaceInfo";
 import { useLocation } from "react-router-dom";
 import { getLocalTrend } from "../apis/Todo";
-
 
 const { kakao } = window;
 
@@ -38,6 +32,100 @@ function AddLocationPage() {
     lat: 33.450701,
     lng: 126.570667,
   });
+
+  const [isMoved, setIsMoved] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
+
+  const search = () => {
+    //console.log("키워드 : " + keyword);
+    //console.log("lat : " + mapCenter.lat);
+    //console.log("lng : " + mapCenter.lng);
+    //console.log("lat : " + kakao.maps.latitude + "," + kakao.maps.longitude);
+    if (!map || !keyword) return;
+    const ps = new kakao.maps.services.Places();
+    ps.keywordSearch(
+      keyword,
+      (data, status, _pagination) => {
+        if (status === kakao.maps.services.Status.OK) {
+          //console.log("data : ", data);
+          const newData = data.map((place) => ({
+            ...place,
+            selected: false,
+          }));
+          setPlaces(newData);
+          //console.log("newdata : ", newData);
+          const bounds = new kakao.maps.LatLngBounds();
+          let markers = [];
+          for (var i = 0; i < data.length; i++) {
+            markers.push({
+              position: {
+                lat: data[i].y,
+                lng: data[i].x,
+              },
+              content: data[i].place_name,
+              poi: data[i].id,
+            });
+            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+          }
+          setMarkers(markers);
+        } else {
+          setPlaces([]);
+          setMarkers([]);
+        }
+      },
+      {
+        radius: 1000,
+        size: 10,
+        location: new kakao.maps.LatLng(mapCenter.lat, mapCenter.lng),
+        sort: kakao.maps.services.SortBy.DISTANCE,
+      }
+    );
+    //console.log("markers : ", markers);
+    setIsMoved(false);
+    setIsSearched(true);
+    setTranslateY(220);
+  };
+
+  const [startY, setStartY] = useState(310);
+  const [translateY, setTranslateY] = useState(220);
+
+  // 터치 이동 시
+  const handleTouchMove = (e) => {
+    //console.log(e.touches[0].clientY);
+    const currentY = e.touches[0].clientY;
+    const distance = currentY - startY;
+
+    if (currentY > 330) {
+      setTranslateY(distance);
+    }
+  };
+
+  // 터치 종료 시
+  const handleTouchEnd = (e) => {
+    //console.log(e.changedTouches[0].clientY);
+    if (e.changedTouches[0].clientY > 450) {
+      //console.log("최소화");
+      setTranslateY(220);
+    } else {
+      // 원래 위치로 되돌아가도록 설정
+      //console.log("제자리");
+      setTranslateY(0);
+    }
+  };
+
+  // 스타일 정의
+  const containerStyle = css`
+    transform: translateY(${translateY}px);
+    transition: ${translateY === 0 ? "transform 0.3s ease-out" : "none"};
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  `;
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -77,20 +165,22 @@ function AddLocationPage() {
   }, []);
 
   useEffect(() => {
+    // console.log("키워드 : " + keyword);
+    // console.log("lat : " + mapCenter.lat);
+    // console.log("lng : " + mapCenter.lng);
     if (!map || !keyword) return;
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(
       keyword,
       (data, status, _pagination) => {
         if (status === kakao.maps.services.Status.OK) {
-          console.log("data : ", data);
+          //console.log("data : ", data);
           const newData = data.map((place) => ({
             ...place,
             selected: false,
           }));
           setPlaces(newData);
-          console.log("newdata : ", newData);
-
+          //console.log("newdata : ", newData);
           const bounds = new kakao.maps.LatLngBounds();
           let markers = [];
           for (var i = 0; i < data.length; i++) {
@@ -105,20 +195,27 @@ function AddLocationPage() {
             bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
           }
           setMarkers(markers);
-          map.setBounds(bounds);
+          // map.setBounds(bounds);
         } else {
           setMarkers([]);
         }
       },
       {
-        radius: 250,
+        radius: 1000,
         size: 10,
         location: new kakao.maps.LatLng(mapCenter.lat, mapCenter.lng),
         sort: kakao.maps.services.SortBy.DISTANCE,
       }
     );
-    console.log("markers : ", markers);
-  }, [map, keyword, mapCenter]);
+    //console.log("markers : ", markers);
+    setIsMoved(false);
+    setIsSearched(true);
+  }, [map, keyword]);
+
+  useEffect(() => {
+    setIsMoved(true);
+    //console.log(mapCenter.lat + " " + mapCenter.lng);
+  }, [mapCenter]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -128,7 +225,7 @@ function AddLocationPage() {
   };
   const selectedPlace = async (index, poiId) => {
     const response = await getLocalTrend(poiId).then((res) => {
-      console.log(res);
+      //console.log(res);
       return res;
     });
 
@@ -163,6 +260,7 @@ function AddLocationPage() {
     >
       <Map
         ref={mapRef}
+        // center={{ lat: mapCenter.lat, lng: mapCenter.lng }}
         center={center.center}
         style={{
           // 지도의 크기
@@ -195,6 +293,7 @@ function AddLocationPage() {
           flex-direction: row;
           flex-wrap: wrap;
           z-index: 2;
+          justify-content: center;
         `}
       >
         <div
@@ -234,9 +333,38 @@ function AddLocationPage() {
               z-index: 2;
             `}
             onClick={() => {
-              // search();
+              search();
             }}
           />
+        </div>
+        <div
+          className={css`
+            display: ${isMoved && isSearched ? "block" : "none"};
+          `}
+        >
+          <div
+            className={css`
+              width: 15rem;
+              height: 2rem;
+              cursor: pointer;
+              background-color: #ffffff;
+              text-align: center;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-top: 1rem;
+              border-radius: 100px;
+              border: 1px solid gray;
+            `}
+          >
+            <span
+              onClick={() => {
+                search();
+              }}
+            >
+              ↻ 현재 위치에서 다시 검색하기
+            </span>
+          </div>
         </div>
       </div>
       {places.length > 0 ? (
@@ -272,15 +400,39 @@ function AddLocationPage() {
               display: block;
               height: 25px;
             }
+            transform: translateY(${translateY}px);
+            transition: ${translateY === 0 ? "transform 0.3s ease-out" : "none"};
+            touch-action: none;
+            user-select: none;
+            -webkit-user-drag: none;
           `}
         >
           <div
             className={css`
-              width: 30px;
-              height: 5px;
-              border-radius: 1rem;
-              background-color: #d9d9d9;
+              width: 100%;
+              height: 5%;
+              display: flex;
+              justify-content: center;
             `}
+          >
+            <div
+              className={css`
+                width: 30px;
+                height: 5px;
+                border-radius: 1rem;
+                background-color: #d9d9d9;
+              `}
+            ></div>
+          </div>
+          <div
+            className={css`
+              position: absolute;
+              width: 100%;
+              top: -20px;
+              height: 40px;
+            `}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           ></div>
 
           {places.map((place, index) => (
@@ -289,7 +441,6 @@ function AddLocationPage() {
               place={place}
               key={index}
               onClick={() => selectedPlace(index)}
-              // localTrend={() => getLocalTrend(place.poiId)}
             />
           ))}
         </div>

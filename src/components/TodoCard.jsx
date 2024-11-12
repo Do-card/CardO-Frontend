@@ -1,11 +1,7 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  usePatchFavorite,
-  usePatchItem,
-  usePostItem,
-} from "../apis/Todo";
+import { usePatchFavorite, usePatchItem, usePostItem } from "../apis/Todo";
 import AdjustInput from "./AdjustInput";
 
 function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
@@ -58,7 +54,7 @@ function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
   const handleDelete = () => {
     setIdOnDelete(Todo.id);
     onDelete();
-  }
+  };
 
   return (
     <div
@@ -183,10 +179,7 @@ function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
                   `}
                   onClick={() => handleCompleteItem(todo.id)}
                 >
-                  <img
-                    src={todo.isDone ? "/CompletedItem.svg" : "/UncompletedItem.svg"}
-                    alt=""
-                  />
+                  <img src={todo.isDone ? "/CompletedItem.svg" : "/UncompletedItem.svg"} alt="" />
                   <div
                     className={css`
                       margin-left: 0.5rem;
