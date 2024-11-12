@@ -120,7 +120,7 @@ function MyPage() {
         className={css`
           width: 100%;
           padding-top: 2rem;
-          padding-left: 4rem;
+          justify-content: space-around;
           display: flex;
           float: left;
           font-size: 2.5rem;
@@ -129,21 +129,17 @@ function MyPage() {
       >
         My Page
         <div className={css`
-          width:50%;
-          display:flex;
-          padding:0.3rem;
+          width: 6rem;
+          display: flex;
           flex-direction: row-reverse;
-          // justify-content: center;
-          
-          `}>
+        `}>
           <SquareButton
             name={"로그아웃"}
             hoverColor={"gray"}
-            onClick={()=> {logout();}}
+            onClick={()=> logout()}
           />
         </div>
       </div>
-
       {/* 도넛 차트 */}
       <div
         className={css`

@@ -30,10 +30,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (checkLocation("/login") || checkLocation("/signin") || checkLocation("/home") || checkLocation("/card")) {
-      return;
-    }
-    if (checkLocation("/login")) {
+    if (checkLocation("/login") || checkLocation("/signin")) {
       return;
     }
 

@@ -54,21 +54,48 @@ function CardPage() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = (e) => {
-      const scrollDirection = e.deltaY > 0 ? "down" : "up"; // deltaY를 이용하여 스크롤 방향을 확인
+    let startY = 0; // 터치 시작 위치
+    let endY = 0; // 터치 종료 위치
 
-      if (scrollDirection === "down" && cards) {
+    const handleScroll = (direction) => {
+      if (direction === "down" && cards) {
         setStartIndex((prevIndex) => Math.min(prevIndex + 1, cards.length - 3)); // 아래로 스크롤 시 증가
       } else {
         setStartIndex((prevIndex) => Math.max(prevIndex - 1, 1)); // 위로 스크롤 시 감소
       }
     };
-    window.addEventListener("wheel", handleScroll); // 스크롤 이벤트 등록
+
+    const handleWheel = (e) => {
+      const scrollDirection = e.deltaY > 0 ? "down" : "up"; // deltaY를 이용하여 스크롤 방향 확인
+      handleScroll(scrollDirection);
+    };
+
+    const handleTouchStart = (e) => {
+      startY = e.touches[0].clientY; // 터치 시작 위치 저장
+    };
+
+    const handleTouchMove = (e) => {
+      endY = e.touches[0].clientY; // 터치 이동 위치 저장
+    };
+
+    const handleTouchEnd = () => {
+      const scrollDirection = endY > startY ? "up" : "down"; // 터치 방향 감지
+      handleScroll(scrollDirection);
+    };
+
+    window.addEventListener("wheel", handleWheel); // 스크롤 이벤트 등록
+    window.addEventListener("touchstart", handleTouchStart); // 터치 시작 이벤트 등록
+    window.addEventListener("touchmove", handleTouchMove); // 터치 이동 이벤트 등록
+    window.addEventListener("touchend", handleTouchEnd); // 터치 종료 이벤트 등록
+
     // 페이지 로드 후 처음 스크롤이 자동으로 발생하도록 상태 설정
     setStartIndex(1); // 또는 적절한 값으로 초기 설정
 
     return () => {
-      window.removeEventListener("wheel", handleScroll); // 컴포넌트 언마운트 시 이벤트 제거
+      window.removeEventListener("wheel", handleWheel); // 컴포넌트 언마운트 시 이벤트 제거
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [cards]);
 
@@ -76,7 +103,7 @@ function CardPage() {
     await getCards().then((res) => {
       // console.log("[Main Page] card response", res.result);
       if (res) {
-        const cardsInfos = res.result.map((card, index) => ({
+        const cardsInfos = res?.result.map((card, index) => ({
           ...card,
           key: index + 1,
         }));
@@ -233,11 +260,14 @@ function CardPage() {
               key={index}
               className={css`
                 position: absolute;
-                z-index: 0;
-                top: ${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem;
-                opacity: ${startIndex > card.key
-                  ? 0
-                  : 1}; /* startIndex와 현재 데이터 key가 같으면 사라짐 */
+                z-index: ${isSelected === card.key
+                  ? 1
+                  : 0}; /* 클릭된 카드의 z-index를 높여서 시각적 우선순위를 줌 */
+                top: ${isSelected === card.key
+                  ? "5rem" // 클릭된 카드는 화면 상단 가까이에 위치
+                  : `${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem`};
+                opacity: ${startIndex > card.key ? 0 : 1};
+                transition: top 0.3s ease-out, opacity 0.3s ease-out;
               `}
               onClick={() => _showCard(card.key)}
             >
