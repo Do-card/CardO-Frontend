@@ -9,7 +9,7 @@ function PlaceInfo({ place, onClick, TodoId }) {
   const navigator = useNavigate();
   const addLocation = usePatchLocation();
 
-  console.log(place.place_name);
+  //console.log(place.place_name);
 
   const setLocation = (place) => {
     const data = {
@@ -19,7 +19,7 @@ function PlaceInfo({ place, onClick, TodoId }) {
       longitude: place.x,
     };
 
-    console.log("data!!!!!!!!!!!!!!!!!", data);
+    //console.log("data!!!!!!!!!!!!!!!!!", data);
     addLocation.mutate({ id: TodoId, data: data });
 
     navigator("/todo");
