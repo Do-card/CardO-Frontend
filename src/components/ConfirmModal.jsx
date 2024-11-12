@@ -51,17 +51,16 @@ function ConfirmModal({ isOpen, onConfirm, onCancel, title, message }) {
           className={css`
             display: flex;
             justify-content: center;
-            width: 100%;
+            width: 70%;
+            gap: 1.2rem;
           `}
         >
-          <SquareButton
-            name="확인"
-            onClick={onConfirm}
-          />
-          <SquareButton
-            name="취소"
-            onClick={onCancel}
-          />
+          {onConfirm
+          ? <SquareButton name="확인" onClick={onConfirm} hoverColor="lightgray" />
+          : <></>}
+          {onCancel
+          ? <SquareButton name={onConfirm ? "취소" : "확인"} onClick={onCancel} hoverColor="lightgray" />
+          : <></>}
         </div>
       </div>
     </div>

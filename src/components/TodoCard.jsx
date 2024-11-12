@@ -181,18 +181,16 @@ function TodoCard({ Todo, isAll, onDelete, setIdOnDelete }) {
                     display: flex;
                     margin-bottom: 0.5rem;
                   `}
+                  onClick={() => handleCompleteItem(todo.id)}
                 >
                   <img
                     src={todo.isDone ? "/CompletedItem.svg" : "/UncompletedItem.svg"}
                     alt=""
-                    onClick={() => handleCompleteItem(todo.id)}
                   />
                   <div
                     className={css`
                       margin-left: 0.5rem;
-                      ${todo.isDone
-                        ? "text-decoration: line-through; color: #626262;"
-                        : ""}
+                      ${todo.isDone ? "text-decoration: line-through; color: #626262;" : ""}
                     `}
                   >
                     {todo.name}

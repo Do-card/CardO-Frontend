@@ -13,7 +13,8 @@ function TodoPage() {
   const [limit, _] = useState(10);
   const [isAll, setIsAll] = useState(true);
   const [isKeywordEmpty, setIsKeywordEmpty] = useState(true);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(true);
+  const [isCreateAlertModalOpen, setIsCreateAlertModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const [deleteTodoId, setDeleteTodoId] = useState(0);
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -91,6 +92,7 @@ function TodoPage() {
       colorBackground: colors[Math.floor(Math.random() * 6)],
     };
     addNewMarker.mutate({ data: data });
+    setIsCreateAlertModalOpen(true);
     refetch();
   };
 
@@ -100,15 +102,19 @@ function TodoPage() {
 
   const handleDeleteMarker = () => {
     deleteMarker.mutate({ id: deleteTodoId });
-    setIsConfirmModalOpen(false);
+    setIsDeleteConfirmModalOpen(false);
   }
 
   const handleCancelModal = () => {
-    setIsConfirmModalOpen(false);
+    setIsDeleteConfirmModalOpen(false);
   }
 
-  const handleConfirmModalOpen = () => {
-    setIsConfirmModalOpen(true);
+  const handleDeleteConfirmModalOpen = () => {
+    setIsDeleteConfirmModalOpen(true);
+  }
+
+  const handleCreateAlert = () => {
+    setIsCreateAlertModalOpen(false);
   }
 
   return (
@@ -123,12 +129,17 @@ function TodoPage() {
       `}
     >
       <ConfirmModal
-        isOpen={isConfirmModalOpen}
-        setShowModal={setIsConfirmModalOpen}
-        // title="확인"
+        isOpen={isDeleteConfirmModalOpen}
+        setShowModal={setIsDeleteConfirmModalOpen}
         message="정말 삭제할까요?"
         onConfirm={() => handleDeleteMarker()}
         onCancel={() => handleCancelModal()}
+      />
+      <ConfirmModal
+        isOpen={isCreateAlertModalOpen}
+        setShowModal={setIsCreateAlertModalOpen}
+        message="생성되었습니다!"
+        onCancel={() => handleCreateAlert()}
       />
       <div
         className={css`
@@ -220,7 +231,7 @@ function TodoPage() {
           <div key={data.id}>
             {!isAll && data.isComplete
             ? <></>
-            : <TodoCard Todo={data} isAll={isAll} onDelete={handleConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
+            : <TodoCard Todo={data} isAll={isAll} onDelete={handleDeleteConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
           </div>
         ))}
         {todoList?.pages.map((page) =>
@@ -228,7 +239,7 @@ function TodoPage() {
             <div key={data.id}>
               {(!isAll && data.isComplete) || (!isKeywordEmpty && data.items.length === 0)
               ? <></>
-              : <TodoCard Todo={data} isAll={isAll} onDelete={handleConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
+              : <TodoCard Todo={data} isAll={isAll} onDelete={handleDeleteConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
             </div>
           ))
         )}
