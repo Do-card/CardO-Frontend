@@ -113,20 +113,6 @@ function AddLocationPage() {
     }
   };
 
-  // 스타일 정의
-  const containerStyle = css`
-    transform: translateY(${translateY}px);
-    transition: ${translateY === 0 ? "transform 0.3s ease-out" : "none"};
-    touch-action: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    background-color: #f0f0f0;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  `;
-
   useEffect(() => {
     if (navigator.geolocation) {
       // GeoLocation을 이용해서 접속 위치를 얻어옵니다
@@ -210,6 +196,7 @@ function AddLocationPage() {
     //console.log("markers : ", markers);
     setIsMoved(false);
     setIsSearched(true);
+    setTranslateY(220);
   }, [map, keyword]);
 
   useEffect(() => {
