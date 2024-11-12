@@ -271,6 +271,8 @@ function CardPage() {
                   ? "5rem"   // 클릭된 카드는 화면 상단 가까이에 위치
                   : `${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem`
                 };
+                opacity: ${startIndex > card.key ? 0 : 1};
+              transition: top 0.3s ease-out, opacity 0.3s ease-out;
               `}
               onClick={() => _showCard(card.key)}
             >
