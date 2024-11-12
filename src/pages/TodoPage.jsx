@@ -1,4 +1,5 @@
 import { css } from "@emotion/css";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import TodoCard from "../components/TodoCard";
 import NavBar from "../components/NavBar";
@@ -9,13 +10,16 @@ import { Toggle } from "../components/Toggle";
 import ConfirmModal from "../components/ConfirmModal"
 
 function TodoPage() {
+  const navigator = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [limit, _] = useState(10);
   const [isAll, setIsAll] = useState(true);
   const [isKeywordEmpty, setIsKeywordEmpty] = useState(true);
   const [isCreateAlertModalOpen, setIsCreateAlertModalOpen] = useState(false);
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
+  const [isChangeLocationConfirmModalOpen, setIsChangeLocationConfirmModalOpen] = useState(false);
   const [deleteTodoId, setDeleteTodoId] = useState(0);
+  const [changeTodoId, setChangeTodoId] = useState(0);
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
@@ -105,7 +109,7 @@ function TodoPage() {
     setIsDeleteConfirmModalOpen(false);
   }
 
-  const handleCancelModal = () => {
+  const handleCancelDeleteConfirmModal = () => {
     setIsDeleteConfirmModalOpen(false);
   }
 
@@ -115,6 +119,18 @@ function TodoPage() {
 
   const handleCreateAlert = () => {
     setIsCreateAlertModalOpen(false);
+  }
+
+  const handleChangeLocationConfirmModalOpen = () => {
+    setIsChangeLocationConfirmModalOpen(true);
+  }
+
+  const handleChangeLocation = () => {
+    navigator("/addloc", { state: { TodoId: changeTodoId } });
+  }
+
+  const handleCancelChangeLocationConfirmModal = () => {
+    setIsChangeLocationConfirmModalOpen(false);
   }
 
   return (
@@ -133,13 +149,20 @@ function TodoPage() {
         setShowModal={setIsDeleteConfirmModalOpen}
         message="정말 삭제할까요?"
         onConfirm={() => handleDeleteMarker()}
-        onCancel={() => handleCancelModal()}
+        onCancel={() => handleCancelDeleteConfirmModal()}
       />
       <ConfirmModal
         isOpen={isCreateAlertModalOpen}
         setShowModal={setIsCreateAlertModalOpen}
         message="생성되었습니다!"
         onCancel={() => handleCreateAlert()}
+      />
+      <ConfirmModal
+        isOpen={isChangeLocationConfirmModalOpen}
+        setShowModal={setIsChangeLocationConfirmModalOpen}
+        message="위치를 변경하시겠습니까?"
+        onConfirm={handleChangeLocation}
+        onCancel={handleCancelChangeLocationConfirmModal}
       />
       <div
         className={css`
@@ -232,7 +255,14 @@ function TodoPage() {
           <div key={data.id}>
             {!isAll && data.isComplete
             ? <></>
-            : <TodoCard Todo={data} isAll={isAll} onDelete={handleDeleteConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
+            : <TodoCard
+                Todo={data}
+                isAll={isAll}
+                onDelete={handleDeleteConfirmModalOpen}
+                setIdOnDelete={setDeleteTodoId}
+                onChangeLocation={handleChangeLocationConfirmModalOpen}
+                setIdOnChangeLocation={setChangeTodoId}
+              />}
           </div>
         ))}
         {todoList?.pages.map((page) =>
@@ -240,7 +270,14 @@ function TodoPage() {
             <div key={data.id}>
               {(!isAll && data.isComplete) || (!isKeywordEmpty && data.items.length === 0)
               ? <></>
-              : <TodoCard Todo={data} isAll={isAll} onDelete={handleDeleteConfirmModalOpen} setIdOnDelete={setDeleteTodoId} />}
+              : <TodoCard
+                  Todo={data}
+                  isAll={isAll}
+                  onDelete={handleDeleteConfirmModalOpen}
+                  setIdOnDelete={setDeleteTodoId}
+                  onChangeLocation={handleChangeLocationConfirmModalOpen}
+                  setIdOnChangeLocation={setChangeTodoId}
+                />}
             </div>
           ))
         )}
