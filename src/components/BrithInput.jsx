@@ -1,14 +1,27 @@
 import { css } from "@emotion/css";
-function InfoInput({ title, type, placeholder, onChange, children, onKeyDown, value, onClick }) {
-  const date = value
-    ? value.getFullYear() +
-      "-" +
-      (value.getMonth() > 9 ? "" : "0") +
-      value.getMonth() +
-      "-" +
-      (value.getDate() > 9 ? "" : "0") +
-      value.getDate()
-    : "";
+
+function dateToString(date) {
+  if (!date){
+    return "";
+  }
+
+  if (!(date instanceof Date)){
+    date = new Date(date);
+  }
+
+  return date.getFullYear() +
+    "-" +
+    (date.getMonth() > 9 ? "" : "0") +
+    (date.getMonth() + 1) +
+    "-" +
+    (date.getDate() > 9 ? "" : "0") +
+    date.getDate()
+}
+
+function BirthInput({ title, type, placeholder, onChange, children, onKeyDown, value }) {
+  const date = dateToString(value);
+  const today = dateToString(new Date());
+
   return (
     <div
       className={css`
@@ -47,15 +60,15 @@ function InfoInput({ title, type, placeholder, onChange, children, onKeyDown, va
           }
         `}
         type={type}
+        min="1950-01-01"
+        max={today}
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
         value={date}
-        readOnly={true}
-        onClick={() => onClick(true)}
       />
       {children}
     </div>
   );
 }
-export default InfoInput;
+export default BirthInput;

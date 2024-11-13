@@ -3,11 +3,9 @@ import InfoInput from "../components/InfoInput";
 import BirthInput from "../components/BrithInput";
 import SquareButton from "../components/Button/SquareButton";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Login } from "../apis/Login";
 import { register } from "../apis/SignIn";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -16,12 +14,9 @@ function SignInPage() {
   const [passwordCheck, setPasswordCheck] = useState();
   const [name, setName] = useState();
   const [nickname, setNickname] = useState();
-  const [birthday, setBirthday] = useState();
+  const [birthday, setBirthday] = useState(new Date("2000-01-01"));
   const [isSamePassword, setIsSamePassword] = useState();
   const [signinFail, setSigninFail] = useState();
-
-  const [selectedDate, setSelectedDate] = useState(false);
-  const datepickerRef = useRef(null);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -53,19 +48,6 @@ function SignInPage() {
   const handleBirthday = (e) => {
     setBirthday(e.target.value);
   };
-
-  // 외부 클릭을 감지하는 useEffect
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (datepickerRef.current && !datepickerRef.current.contains(event.target)) {
-        setSelectedDate(false); // 외부 클릭 시 달력을 닫음
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const signIn = async () => {
     const data = {
@@ -184,54 +166,13 @@ function SignInPage() {
           placeholder={"닉네임"}
           onChange={handleNickname}
         />
-        <div
-          className={css`
-            width: 100%;
-            position: relative;
-          `}
-          ref={datepickerRef}
-        >
-          <BirthInput
-            title={"Birthday"}
-            type={"text"}
-            placeholder={"생년월일"}
-            onChange={handleBirthday}
-            value={birthday}
-            onClick={setSelectedDate}
-          ></BirthInput>
-          <img
-            src={`/Calendar.svg`}
-            alt=""
-            className={css`
-              position: absolute;
-              top: 50%;
-              right: 10%;
-              cursor: pointer;
-            `}
-            onClick={() => setSelectedDate(true)}
-          />
-          <div
-            className={css`
-              position: absolute;
-              top: 120%;
-              left: 10%;
-              display: ${selectedDate ? "block" : "none"};
-            `}
-          >
-            <DatePicker
-              dateFormat="yyyy.MM.dd" // 날짜 형태
-              shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-              minDate={new Date("2000-01-01")} // minDate 이전 날짜 선택 불가
-              maxDate={new Date()} // maxDate 이후 날짜 선택 불가
-              selected={birthday}
-              onChange={(date) => {
-                setBirthday(date);
-                setSelectedDate(false);
-              }}
-              inline
-            />
-          </div>
-        </div>
+        <BirthInput
+          title={"Birthday"}
+          type={"date"}
+          value={birthday}
+          placeholder={"생년월일"}
+          onChange={handleBirthday}
+        />
         {signinFail ? (
           <div
             className={css`
