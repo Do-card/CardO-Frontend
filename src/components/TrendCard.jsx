@@ -5,6 +5,7 @@ import { trendAll } from "../apis/Home";
 function TrendCard() {
   const [mainTrend, setMainTrend] = useState([]);
   const [userTrend, setUserTrend] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Fetch data and update pattern groups
   const getTrend = async () => {
@@ -27,7 +28,23 @@ function TrendCard() {
 
   useEffect(() => {
     getTrend();
+    setLoading(true);
   }, []);
+
+  if(!loading){
+    return <div className={css`
+      display: flex;
+      width: 100%;
+      border-radius: 1rem;
+      background-color: #ffffff;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      height: 9.5rem;
+      cursor: Default;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    `}>Loading...</div>;
+  }
 
   return (
     <div

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function TodoMain() {
   // Define initial state with each pattern's "isComplete" status
   const [patterns, setPatterns] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +18,23 @@ function TodoMain() {
           })
         );
       }
+      setLoading(true);
     });
   }, []);
+
+  if(!loading){
+    return <div
+    className={css`
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      border-radius: 1rem;
+      background-color: #ffffff;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      height: 10rem;
+    `}
+    >Loading...</div>;
+  }
 
   return (
     <div
@@ -44,7 +60,7 @@ function TodoMain() {
         <div
           className={css`
             padding-left: 1rem;
-            padding-top: 1rem;
+            padding-top: 0.2rem;
             display: flex;
             align-items: center;
             width: 100%;

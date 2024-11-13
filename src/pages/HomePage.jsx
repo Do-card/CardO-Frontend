@@ -13,6 +13,7 @@ function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [isSelected, setIsSelected] = useState(10000);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   // console.log(card);
   // if(card) setHasCard(true);
@@ -23,9 +24,26 @@ function HomePage() {
       if (res){
         setCard(res.result);
       }
-      return res;
+      setLoading(true);
     });
   }, []);
+
+  if(!loading){
+    return <div
+    className={css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff;
+      padding: 0 2rem;
+      justify-content: center;
+      font-size: 2rem;
+      color: #888;
+    `}>
+      <img src="/loading.gif"/>
+      </div>;
+  }
 
   return (
     <div
@@ -141,12 +159,13 @@ function HomePage() {
             className={css`
               display: flex;
               width: 100%;
+              position: relative;
             `}
           >
             <div
               className={css`
                 display: flex;
-                width: 90%;
+                width: 95%;
                 height: auto;
               `}
             >
@@ -172,8 +191,11 @@ function HomePage() {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 10%;
+                width: 10vw;
                 z-index: 0;
+                position: absolute;
+                left: 19rem;
+                top: 1.5rem;
               `}
             >
               <div
