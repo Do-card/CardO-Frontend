@@ -371,27 +371,8 @@ function AddLocationPage() {
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
-            padding-top: 0.5rem;
-            padding-bottom: 6rem; // 짤리는 거 수정
-            box-sizing: border-box;
-            overflow: scroll;
-            ::-webkit-scrollbar {
-              width: 0.4rem;
-            }
-            ::-webkit-scrollbar-thumb {
-              background-color: #dedede; /* 스크롤바 색상 */
-              border-radius: 1rem; /* 스크롤바 모서리 둥글게 */
-            }
-            ::-webkit-scrollbar-corner {
-              background-color: transparent;
-            }
-            ::-webkit-scrollbar-button:vertical:start:increment {
-              display: block;
-              height: 25px;
-            }
             transform: translateY(${translateY}px);
             transition: ${translateY === 0 ? "transform 0.3s ease-out" : "none"};
-            touch-action: none;
             user-select: none;
             -webkit-user-drag: none;
           `}
@@ -399,10 +380,14 @@ function AddLocationPage() {
           <div
             className={css`
               width: 100%;
-              height: 5%;
+              height: 3rem;
               display: flex;
               justify-content: center;
+              align-items: center;
+              margin-top: 0.5rem;
             `}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <div
               className={css`
@@ -413,26 +398,41 @@ function AddLocationPage() {
               `}
             ></div>
           </div>
+
           <div
             className={css`
-              position: absolute;
+              display: flex;
+              flex-direction: column;
               width: 100%;
-              top: -20px;
-              height: 40px;
+              padding-bottom: 5rem; // 짤리는 거 수정
+              box-sizing: border-box;
+              overflow: scroll;
+              ::-webkit-scrollbar {
+                width: 0.4rem;
+              }
+              ::-webkit-scrollbar-thumb {
+                background-color: #dedede; /* 스크롤바 색상 */
+                border-radius: 1rem; /* 스크롤바 모서리 둥글게 */
+              }
+              ::-webkit-scrollbar-corner {
+                background-color: transparent;
+              }
+              ::-webkit-scrollbar-button:vertical:start:increment {
+                display: block;
+                height: 25px;
+              }
             `}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          ></div>
-
-          {places.map((place, index) => (
-            <PlaceInfo
-              TodoId={TodoId}
-              place={place}
-              key={index}
-              onClick={() => {
-                selectedPlace(index, place.id);}}
-            />
-          ))}
+          >
+            {places.map((place, index) => (
+              <PlaceInfo
+                TodoId={TodoId}
+                place={place}
+                key={index}
+                onClick={() => {
+                  selectedPlace(index, place.id);}}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <></>
