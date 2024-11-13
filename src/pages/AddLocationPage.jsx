@@ -211,6 +211,8 @@ function AddLocationPage() {
     }
   };
   const selectedPlace = async (index, poiId) => {
+    console.log("poiId : ", poiId);
+
     const response = await getLocalTrend(poiId).then((res) => {
       //console.log(res);
       return res;
@@ -427,7 +429,8 @@ function AddLocationPage() {
               TodoId={TodoId}
               place={place}
               key={index}
-              onClick={() => selectedPlace(index)}
+              onClick={() => {
+                selectedPlace(index, place.id);}}
             />
           ))}
         </div>
