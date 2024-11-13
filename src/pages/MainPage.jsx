@@ -6,8 +6,6 @@ import CardModal from "../components/CardModal";
 import { getCards, getUser } from "../apis/Main";
 import { useNavigate } from "react-router-dom";
 import { discountAll } from "../apis/Discount";
-import { useAsync } from "react-select/async";
-import TodoMapOverlay from "../components/TodoMapOverlay";
 
 function MainPage() {
   const [isSelected, setIsSelected] = useState(10000);

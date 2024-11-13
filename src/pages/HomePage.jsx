@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState} from "react";
 import NavBar from "../components/NavBar";
 import TrendCard from "../components/TrendCard";
 import TodoMain from "../components/TodoMain";
@@ -75,7 +75,7 @@ function HomePage() {
       <div
         className={css`
           display: flex;
-          margin-top: 2em;
+          margin-top: 1.5rem;
           width: 100%;
         `}
       >
@@ -158,43 +158,42 @@ function HomePage() {
           <div
             className={css`
               display: flex;
-              width: 100%;
+              width: 90%;
               position: relative;
             `}
           >
             <div
               className={css`
                 display: flex;
-                width: 95%;
+                width: 100%;
                 height: auto;
               `}
             >
-              <div
+              {/* <div
                 className={css`
                   display: flex;
                   position: relative;
-                  left: -3%;
+                  // left: -3%;
                   scale: 0.95;
-                  z-index: 1;
+                  z-index: 2;
                 `}
-              >
-                <Card
-                  data={card}
-                  setShowModal={setShowModal}
-                  isSelected={true}
-                  isRepresentativeSelected={false}
-                />
-              </div>
+              > */}
+              <Card
+                data={card}
+                setShowModal={setShowModal}
+                isSelected={true}
+                isRepresentativeSelected={false}
+              />
             </div>
             <div
               className={css`
                 display: flex;
-                justify-content: center;
+                justify-content: start;
                 align-items: center;
-                width: 10vw;
-                z-index: 0;
-                position: absolute;
-                left: 19rem;
+                // width: 10vw;
+                z-index: 1;
+                // position: absolute;
+                // left: 19rem;
                 top: 1.5rem;
               `}
             >
@@ -203,7 +202,7 @@ function HomePage() {
                   display: flex;
                   justify-content: center;
                   align-items: center;
-                  position: relative;
+                  // position: relative;
                   padding: 2.5rem 0.4rem;
                   border-radius: 0 1rem 1rem 0;
                   writing-mode: vertical-lr;
@@ -220,6 +219,7 @@ function HomePage() {
               </div>
             </div>
           </div>
+          // </div>
         )}
       </div>
 

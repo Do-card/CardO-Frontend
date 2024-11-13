@@ -260,9 +260,6 @@ function CardPage() {
               key={index}
               className={css`
                 position: absolute;
-                z-index: ${isSelected === card.key
-                  ? 1
-                  : 0}; /* 클릭된 카드의 z-index를 높여서 시각적 우선순위를 줌 */
                 top: ${isSelected === card.key
                   ? "5rem" // 클릭된 카드는 화면 상단 가까이에 위치
                   : `${(index - startIndex + 2) * 3.5 + (isSelected < card.key ? 11 : 1)}rem`};

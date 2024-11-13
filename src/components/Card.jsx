@@ -19,7 +19,7 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
       className={css`
         width: 20.5rem;
         padding: 0 1.5rem;
-        height: 13rem;
+        height: 12rem;
         border-radius: 1rem;
         background-color: ${data.colorBackground};
         color: ${data.colorTitle};
