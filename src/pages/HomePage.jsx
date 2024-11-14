@@ -194,7 +194,7 @@ function HomePage() {
             <div
               className={css`
                 display: flex;
-                width: 100%;
+                // width: 100%;
                 height: auto;
               `}
             >
