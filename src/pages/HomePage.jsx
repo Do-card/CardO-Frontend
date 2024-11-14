@@ -7,26 +7,54 @@ import Card from "../components/Card";
 import { useNavigate } from "react-router-dom";
 import { getRepresentiveCard } from "../apis/Main";
 import CardModal from "../components/CardModal";
+import { getAllFavoriteMarkers } from "../apis/Todo";
+import { trendAll } from "../apis/Home";
 
 function HomePage() {
   const [card, setCard] = useState();
   const [showModal, setShowModal] = useState(false);
   const [isSelected, setIsSelected] = useState(10000);
   const navigate = useNavigate();
+  const [isTrendLoading, setIsTrendLoading] = useState(false);
+  const [isMarkerLoading, seIsMarkerLoading] = useState(false);
+  const [isCardLoading, setIsCardLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // console.log(card);
-  // if(card) setHasCard(true);
-  // else setHasCard(false);
+  const [patterns, setPatterns] = useState([]);
+  const [mainTrend, setMainTrend] = useState([]);
+  const [userTrend, setUserTrend] = useState([]);
 
   useEffect(() => {
+    // Fetch data and update pattern groups
+    trendAll().then((res) => {
+      if (res) {
+        setMainTrend(res.result.mainTrend);
+        setUserTrend(res.result.userTrend);
+      } else {
+        console.log("No response received.");
+      }
+      setIsTrendLoading(true);
+    })
+    
+    getAllFavoriteMarkers().then((res) => {
+      if (res?.length > 0) {
+        setPatterns(res[0].items.filter((item) => !item.isDone && item));
+      }
+      seIsMarkerLoading(true);
+    });
+
     getRepresentiveCard().then((res) => {
       if (res){
         setCard(res.result);
       }
-      setLoading(true);
+      setIsCardLoading(true);
     });
   }, []);
+
+  useEffect(() => {
+    if (isTrendLoading && isMarkerLoading && isCardLoading){
+      setLoading(true);
+    }
+  }, [isTrendLoading, isMarkerLoading, isCardLoading])
 
   if(!loading){
     return <div
@@ -71,7 +99,7 @@ function HomePage() {
         실시간 소비 트렌트
       </div>
       {/* Map Component */}
-      <TrendCard />
+      <TrendCard mainTrend={mainTrend} userTrend={userTrend} />
       <div
         className={css`
           display: flex;
@@ -79,7 +107,7 @@ function HomePage() {
           width: 100%;
         `}
       >
-        <TodoMain />
+        <TodoMain patterns={patterns} />
       </div>
       <div
         className={css`

@@ -1,40 +1,8 @@
 import { css } from "@emotion/css";
-import { useState, useEffect } from "react";
-import { getAllFavoriteMarkers } from "../apis/Todo";
 import { useNavigate } from "react-router-dom";
 
-function TodoMain() {
-  // Define initial state with each pattern's "isComplete" status
-  const [patterns, setPatterns] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getAllFavoriteMarkers().then((res) => {
-      if (res?.length > 0) {
-        setPatterns(
-          res[0].items.filter((item) => {
-            return !item.isDone && item;
-          })
-        );
-      }
-      setLoading(true);
-    });
-  }, []);
-
-  if(!loading){
-    return <div
-    className={css`
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      border-radius: 1rem;
-      background-color: #ffffff;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-      height: 10rem;
-    `}
-    >Loading...</div>;
-  }
+function TodoMain({patterns}) {
+  const navigate = useNavigate()
 
   return (
     <div

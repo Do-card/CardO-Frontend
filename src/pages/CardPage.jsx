@@ -16,6 +16,7 @@ function CardPage() {
   const [selectedIndex, setSelectedIndex] = useState();
   const [user, setUser] = useState();
   const [isRepresentativeSelected, setIsRepresentativeSelected] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ function CardPage() {
   }, [isSelected]);
 
   useEffect(() => {
-    getInfo();
+    getInfo().then(() => setLoading(true));
   }, []);
 
   useEffect(() => {
@@ -149,6 +150,23 @@ function CardPage() {
 
     setIsRepresentativeSelected(!isRepresentativeSelected);
   };
+
+  if(!loading){
+    return <div
+    className={css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff;
+      padding: 0 2rem;
+      justify-content: center;
+      font-size: 2rem;
+      color: #888;
+    `}>
+      <img src="/loading.gif"/>
+    </div>;
+  }
 
   return (
     <div

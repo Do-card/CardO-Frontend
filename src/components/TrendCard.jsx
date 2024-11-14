@@ -1,50 +1,9 @@
 import { css } from "@emotion/css";
-import { useEffect, useState, useRef } from "react";
-import { trendAll } from "../apis/Home";
 
-function TrendCard() {
-  const [mainTrend, setMainTrend] = useState([]);
-  const [userTrend, setUserTrend] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // Fetch data and update pattern groups
-  const getTrend = async () => {
-    const response = await trendAll().then((res) => {
-      console.log(res);
-      return res;
-    });
-
-    if (response) {
-      setMainTrend(response.result.mainTrend);
-      setUserTrend(response.result.userTrend);
-    } else {
-      console.log("No response received.");
-    }
-  };
-
+function TrendCard({mainTrend, userTrend}) {
   const truncateText = (text) => {
     return text.length > 7 ? `${text.slice(0, 7)} ..` : text;
   };
-
-  useEffect(() => {
-    getTrend();
-    setLoading(true);
-  }, []);
-
-  if(!loading){
-    return <div className={css`
-      display: flex;
-      width: 100%;
-      border-radius: 1rem;
-      background-color: #ffffff;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-      height: 9.5rem;
-      cursor: Default;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    `}>Loading...</div>;
-  }
 
   return (
     <div
