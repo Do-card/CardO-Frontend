@@ -14,6 +14,7 @@ function MyPage() {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
+  const [loading, setLoading] = useState(false);
   const [transaction, setTransaction] = useState(null);
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const [cardNameList, setSelectedCardNameList] = useState([
@@ -25,9 +26,11 @@ function MyPage() {
   const getTransaction = async () => {
     const card = await getTransactionAll();
     setTransaction(card);
+    setLoading(true);
   };
 
   useEffect(() => {
+    setLoading(false);
     const ctx = chartRef.current.getContext("2d");
     chartInstance.current = new Chart(ctx, {
       type: "doughnut",
@@ -41,7 +44,7 @@ function MyPage() {
         },
       },
     });
-
+  
     getTransaction();
 
     // 컴포넌트 언마운트 시 차트를 삭제
@@ -53,8 +56,6 @@ function MyPage() {
   //결제 내역
   useEffect(() => {
     if (transaction !== null) {
-      // console.log(transaction);
-
       setSelectedCardNameList(
         transaction.result.cardNameList.map((name, index) => {
           return {
@@ -116,6 +117,20 @@ function MyPage() {
         background-color: #f6f6f6;
       `}
     >
+      {loading ? <></> : <div
+        className={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 100vh;
+          background-color: #fff;
+          padding: 0 2rem;
+          justify-content: center;
+          font-size: 2rem;
+          color: #888;
+      `}>
+        <img src="/loading.gif"/>
+      </div>}
       <div
         className={css`
           width: 100%;
