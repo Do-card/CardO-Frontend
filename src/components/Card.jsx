@@ -18,8 +18,8 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
     <div
       className={css`
         width: 20.5rem;
-        padding: 0 1.5rem;
-        height: 12rem;
+        padding: 0.5rem 1.5rem 1rem 1.5rem;
+        height: 11rem;
         border-radius: 1rem;
         background-color: ${data.colorBackground};
         color: ${data.colorTitle};
@@ -82,7 +82,7 @@ function Card({ data, setShowModal, isSelected, isRepresentativeSelected }) {
       </div>
       <div
         className={css`
-          font-size: 1.3rem;
+          font-size: 1lh;
           display: flex;
           flex-direction: column;
           justify-content: center;

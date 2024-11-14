@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 
-function TodoMain({patterns}) {
+function TodoMain({favoriteMarkerName, patterns}) {
   const navigate = useNavigate()
 
   return (
@@ -40,7 +40,7 @@ function TodoMain({patterns}) {
             cursor: Default;
           `}
         >
-          TODO LIST
+          { favoriteMarkerName }
         </div>
         <div
           className={css`
@@ -153,7 +153,7 @@ function TodoMain({patterns}) {
                 color: #6c6c6c;
               `}
             >
-              등록된 TODO가 없습니다.
+              즐겨찾기한 TODO가 없습니다.
             </span>
             <button
               className={css`

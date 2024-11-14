@@ -32,8 +32,9 @@ function NavBar({ isSelected }) {
   return (
     <div
       className={css`
-        position: absolute;
-        bottom: 25px;
+        position: fixed;
+        bottom: 2rem;
+        // top: calc(100% - 6rem);
         width: 20.56rem;
         box-sizing: border-box;
         padding: 0.5rem;
