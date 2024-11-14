@@ -44,7 +44,10 @@ axios.interceptors.request.use(
     }
     return request;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    window.location("/login");
+    return Promise.reject(error)
+  }
 );
 
 axios.interceptors.response.use(
@@ -65,6 +68,7 @@ axios.interceptors.response.use(
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return axios(originalRequest);
     }
+    window.location("/login");
     return error;
   }
 );
