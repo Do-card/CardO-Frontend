@@ -165,6 +165,7 @@ function CardPage() {
       color: #888;
     `}>
       <img src="/loading.gif"/>
+      <NavBar isSelected={"Card"} />
     </div>;
   }
 

@@ -70,7 +70,8 @@ function HomePage() {
       color: #888;
     `}>
       <img src="/loading.gif"/>
-      </div>;
+      <NavBar isSelected={"Home"} />
+    </div>;
   }
 
   return (
