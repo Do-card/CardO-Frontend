@@ -39,3 +39,17 @@ export const sendCard = async (data) => {
     // console.log("send card fail : ", error);
   }
 };
+
+export const payment = async (data) => {
+  try {
+    // console.log(data);
+    const response = await axios.post("/transactions", data).then((res) => {
+      // console.log(res.data);
+      return res.data;
+    });
+    // console.log("[IN AXIOS] payment response", response);
+    return response.result;
+  } catch (error) {
+    // console.log("payment fail : ", error);
+  }
+};

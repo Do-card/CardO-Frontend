@@ -7,6 +7,8 @@ import { discountAll } from "../apis/Discount";
 import Card from "../components/Card";
 import CardModal from "../components/CardModal";
 import SquareButton from "../components/Button/SquareButton";
+import { payment } from "../apis/Mydata";
+import toast, { Toaster } from "react-hot-toast";
 
 function CardPage() {
   const [isSelected, setIsSelected] = useState(10000);
@@ -39,6 +41,50 @@ function CardPage() {
       }
     }
   };
+
+  const _payment = async () => {
+    const data = {
+      cardNo: "1006113951589939",
+      cvc: "859",
+      merchantId: 1464,
+      paymentBalance: 4800,
+    };
+    const response = await payment(data);
+
+    notify(response);
+
+    discountAll().then((res) => {
+      // console.log("[Main Page] discount response : ", res.result);
+      if (res) {
+        setDiscount(res.result);
+        // return res.result;
+      }
+    });
+  };
+
+  const notify = (data) =>
+    toast(
+      "결제가 완료됐습니다.\n" +
+        "매장명 : " +
+        data.merchantName +
+        "\n" +
+        "결제 금액 : " +
+        data.paymentBalance +
+        "원\n" +
+        "결제 일시 :\n" +
+        data.transactionDate.slice(0, 4) +
+        "년 " +
+        data.transactionDate.slice(4, 6) +
+        "월 " +
+        data.transactionDate.slice(6, 8) +
+        "일\n" +
+        data.transactionTime.slice(0, 2) +
+        "시 " +
+        data.transactionTime.slice(2, 4) +
+        "분 " +
+        data.transactionTime.slice(4, 6) +
+        "초"
+    );
 
   useEffect(() => {
     // console.log("startIndex", startIndex);
@@ -152,22 +198,25 @@ function CardPage() {
     setIsRepresentativeSelected(!isRepresentativeSelected);
   };
 
-  if(!loading){
-    return <div
-    className={css`
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      background-color: #fff;
-      padding: 0 2rem;
-      justify-content: center;
-      font-size: 2rem;
-      color: #888;
-    `}>
-      <img src="/loading.gif"/>
-      <NavBar isSelected={"Card"} />
-    </div>;
+  if (!loading) {
+    return (
+      <div
+        className={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 100vh;
+          background-color: #fff;
+          padding: 0 2rem;
+          justify-content: center;
+          font-size: 2rem;
+          color: #888;
+        `}
+      >
+        <img src="/loading.gif" />
+        <NavBar isSelected={"Card"} />
+      </div>
+    );
   }
 
   return (
@@ -196,17 +245,13 @@ function CardPage() {
       >
         Card
         <div
-          className = {css`
-            width:30%;
-            margin-left:5rem;
-            margin-right:3rem;
-            `}
+          className={css`
+            width: 30%;
+            margin-left: 5rem;
+            margin-right: 3rem;
+          `}
         >
-          <SquareButton
-            name={"결제"}
-            hoverColor={"lightblue"}
-            onClick={console.log("결제")}
-          ></SquareButton>
+          <SquareButton name={"결제"} hoverColor={"lightblue"} onClick={_payment}></SquareButton>
         </div>
       </div>
       <div
@@ -445,6 +490,8 @@ function CardPage() {
         <CardModal setShowModal={setShowModal} data={cards[selectedIndex - 1]}></CardModal>
       )}
       <NavBar isSelected={"Card"} />
+
+      <Toaster position="bottom-center" />
     </div>
   );
 }
