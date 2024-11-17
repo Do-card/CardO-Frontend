@@ -6,6 +6,7 @@ import { getCards, getUser, postRepresentiveCard } from "../apis/Main";
 import { discountAll } from "../apis/Discount";
 import Card from "../components/Card";
 import CardModal from "../components/CardModal";
+import SquareButton from "../components/Button/SquareButton";
 
 function CardPage() {
   const [isSelected, setIsSelected] = useState(10000);
@@ -194,6 +195,19 @@ function CardPage() {
         `}
       >
         Card
+        <div
+          className = {css`
+            width:30%;
+            margin-left:5rem;
+            margin-right:3rem;
+            `}
+        >
+          <SquareButton
+            name={"결제"}
+            hoverColor={"lightblue"}
+            onClick={console.log("결제")}
+          ></SquareButton>
+        </div>
       </div>
       <div
         className={css`
